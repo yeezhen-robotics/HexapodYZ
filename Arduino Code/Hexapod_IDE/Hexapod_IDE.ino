@@ -15,17 +15,20 @@ const byte Address[6] = "00009"; /* Address from which data to be received */
 
 // Defines //
 
-#define PI 3.141592                                                   // PI
-#define SERVOMIN  125                                                 // this is the 'minimum' pulse length count (out of 4096)
-#define SERVOMAX  625                                                 // this is the 'maximum' pulse length count (out of 4096)
-#define CoxaAddressStart 0                           // This is where the Microcontroller can start Sweepping through the Coxas
-#define FemurAddressStart 3                          // This is where the Microcontroller can start Sweepping through the Femurs
-#define TibiaAddressStart 6                          // This is where the Microcontroller can start Sweepping through the Tibias
+#define PI 3.141592                        // PI
+#define SERVOMIN  125                      // this is the 'minimum' pulse length count (out of 4096)
+#define SERVOMAX  625                      // this is the 'maximum' pulse length count (out of 4096)
+#define CoxaAddressStart 0                 // This is where the Microcontroller can start Sweepping through the Coxas
+#define FemurAddressStart 3                // This is where the Microcontroller can start Sweepping through the Femurs
+#define TibiaAddressStart 6                // This is where the Microcontroller can start Sweepping through the Tibias
 #define TibiaAddressEnd 9
 #define TrueHomePosition 90
-#define CoxaTargAngle qf[0]
-#define FemurTargAngle qf[1]
-#define TibiaTargAngle qf[2]
+#define CoxaTargAngle qf[0]                // Defined for pwm_response_ALT_Group
+#define FemurTargAngle qf[1]               // Defined for pwm_response_ALT_Group
+#define TibiaTargAngle qf[2]               // Defined for pwm_response_ALT_Group
+#define CoxaTargAngleUNISON qf[group][0]   // Defined for pwm_response_UNISON_Group        
+#define FemurTargAngleUNISON qf[group][1]  // Defined for pwm_response_UNISON_Group
+#define TibiaTargAngleUNISON qf[group][2]  // Defined for pwm_response_UNISON_Group
 
 // Defines END //
 
@@ -41,9 +44,11 @@ char FemurAngleNames[6][3] = {{"LF1"},{"LF2"},{"LF3"},{"RF1"},{"RF2"},{"RF3"}};
 char TibiaAngleNames[6][3] = {{"LT1"},{"LT2"},{"LT3"},{"RT1"},{"RT2"},{"RT3"}};
 
 // Variable Initialisation
-int rx_data = 0 ;                      // Variable to store received data
+int rx_data = 0, angle = 0, magnitude = 0;  // Variable to store received data
 float step = 10*rx_data/4;
-float group_sequence[7] = {0,0,1,0,1,0,1}; //Sequence corresponding to the movement loop
+float group_sequence[7] = {0,0,1,0,1,0,1};  // Sequence corresponding to the movement loop
+
+
 int movement_step_index = 0; // The index to simulate for loop
 
 // Variable Declarations END //
@@ -105,32 +110,65 @@ void loop() {
     }
   }
   else {
-    Serial.println("Not Receiving !!!");      // If not receiving valid data print " Not Receiving !!! " on Serial Monitor
+    //Serial.println("Not Receiving !!!");      // If not receiving valid data print " Not Receiving !!! " on Serial Monitor
     rx_data = 0;
+  }
+  
+  angle = floor((double)(rx_data/10));
+  magnitude = rx_data - angle*10;
+  int direction;
+  if (abs(angle) >= 160) {
+    direction = -1;
+  } 
+  else {
+    direction = 1;
+  }
+
+  int turn = 0;
+  if (angle >= 45 and angle <160) {
+    turn = 1;
+  }
+  else if (angle <= -45 and angle > 160) {
+    turn = -1;
+  }
+  else {
+    turn = 0;
   }
 
   //movement(rx_data*2,0.0);
-  step = 20*rx_data/4;
+  step = direction * 20 * magnitude / 4; 
 
+  // THIS HAS TO REMAIN AFTER STEP SO THAT THE VARIABLE UPDATES ITS MOVEMENT SIZE EVERY TIMESTEP TO ADJUST TO DIFFERENT SPEEDS (NOT INCLUDING THIS HERE WILL MAKE THE ROBOT STALL)
   float movement_loop[7][3] = {
   // Coxa  ,Femur   ,Tibia
     {90-step,90,85},    // Pick G1 Femur Up & Shift G1 Coxa by step
     {90-step,50,70},    // Put G1 Femur Down
     {90     ,90,85},    // Pick G2 Femur Up
-    {90     ,50,70},    // Shift G1 Coxa Forwards
-    {90-step,50,70},    // Shift G2 Coxa by Step & Put G2 Femur Down
+    {90+step,50,70},    // Shift G1 Coxa Forwards
+    {90     ,50,70},    // Shift G2 Coxa by Step & Put G2 Femur Down
     {90     ,90,85},    // Pick G1 Femur Up
-    {90     ,50,70},    // Shift G2 Femur Forwards
-  };  
+    {90+step,50,70},    // Shift G2 Femur Forwards
+  }; 
 
-  if (rx_data > 0) {
-    pwm_response_ALT_Group(movement_loop[movement_step_index],2.0,group_sequence[movement_step_index]);
-    movement_step_index++;
+  if (magnitude > 0) {
+    //Serial.println(movement_step_index);
+    if (group_sequence[movement_step_index] == 2) {
+
+      print_servo_state(movement_loop[movement_step_index], "Going to ->");   // angles now reflect post-move state
+      pwm_response_UNISON_Group(movement_loop[movement_step_index],movement_loop[movement_step_index+1],0.5);
+
+      movement_step_index += 2;
+    }
+    else {
+      pwm_response_ALT_Group(movement_loop[movement_step_index],group_sequence[movement_step_index],0.5,turn);
+      movement_step_index++;
+    } 
   }
 
   if (movement_step_index > 6) {
     movement_step_index = 0;
   }
+
 }
 
 // Resets the robot to the home position
@@ -161,6 +199,7 @@ void arise() {
 
 void movement(int magnitude, int angle) {
   float step = 10*magnitude/4;
+  Serial.println(step);
   float movement_loop[8][3] = {
   // Coxa  ,Femur   ,Tibia
     {90-step,65,85},    // Pick G1 Femur Up & Shift G1 Coxa by step
@@ -175,7 +214,7 @@ void movement(int magnitude, int angle) {
   if (magnitude > 0) {
     float group_sequence[10] = {0,0,1,0,1,0,1,0};
     for (int i = 0; i < 8; i++) {
-      pwm_response_ALT_Group(movement_loop[i],2.0,group_sequence[i]);
+      pwm_response_ALT_Group(movement_loop[i],group_sequence[i],2.0,0);
     }
   }  
 }
@@ -262,7 +301,7 @@ void pwm_response_CFT(float qf[3], float period) {
 }
 
 // Sets all of the motor positions of the same alternate group to the same final value
-void pwm_response_ALT_Group(float qf[3], float period, int group) { // Group 0 - L1; Group 1 - L2
+void pwm_response_ALT_Group(float qf[3], int group, float period, int turn) { // Group 0 - L1; Group 1 - L2 | For Direction, 0 = forwards, 1 = turn
   // initial, final time and real time variable
   float tf = period, current_angle_LC, current_angle_RC, current_angle_LF, current_angle_RF, current_angle_LT, current_angle_RT, t;
   // steps for linspace resolution
@@ -271,15 +310,20 @@ void pwm_response_ALT_Group(float qf[3], float period, int group) { // Group 0 -
 
   for (int s = 0; s < steps; s++) {
     t = s*0.0167; // 1/60 Approx. 0.016666...
+    
+    // Left Side of Hexapod (Coxa, Femur and Tibia)
     for(int i = CoxaAddressStart+group; i < FemurAddressStart; i += 2) {     // Set all my L_Coxa Servos to the specified angle
-      current_angle_LC = sinusoid(CoxaTargAngle,CoxaAngles[i],PI/tf,t);      // Calculate Sinusoid Trajectory
+      int CoxaTrueTargAngle = turn == 1 ? convert4symmetry(CoxaTargAngle) : CoxaTargAngle;
+      current_angle_LC = sinusoid(CoxaTrueTargAngle,CoxaAngles[i],PI/tf,t);      // Calculate Sinusoid Trajectory
       board1.setPWM(i, 0, angleToPulse(current_angle_LC));                   // Angle for the left side
+      CoxaAngles[i]=current_angle_LC;
       //Serial.print("LC:");
       //Serial.println(current_angle_LC);
     }
     for(int i = FemurAddressStart+group; i < TibiaAddressStart; i += 2) {    // Set all my L_Femur Servos to the specified angle
       current_angle_LF = sinusoid(FemurTargAngle,FemurAngles[i-3],PI/tf,t);    // Calculate Sinusoid Trajectory
       board1.setPWM(i, 0, angleToPulse(current_angle_LF));                   // Angle for the left side 
+      FemurAngles[i-3]=current_angle_LF;
       //Serial.print("LF:");
       //Serial.println(FemurAngles[i]);
       //Serial.println(current_angle_LF);
@@ -287,44 +331,101 @@ void pwm_response_ALT_Group(float qf[3], float period, int group) { // Group 0 -
     for(int i = TibiaAddressStart+group; i < TibiaAddressEnd; i += 2) {      // Set all my L_Tibia Servos to the specified angle
       current_angle_LT = sinusoid(TibiaTargAngle,TibiaAngles[i-6],PI/tf,t);    // Calculate Sinusoid Trajectory
       board1.setPWM(i, 0, angleToPulse(current_angle_LT));                   // Angle for the left side 
+      TibiaAngles[i-6]=current_angle_LT;
       //Serial.print("LT:");
       //Serial.println(current_angle_LT);
     }
+
+    // Right Side of Hexapod (Coxa, Femur and Tibia)
     for(int i = CoxaAddressStart+!group; i < FemurAddressStart; i += 2) { // Set all my R_Coxa Servos to the specified angle
-      current_angle_RC = sinusoid(convert4symmetry(CoxaTargAngle),CoxaAngles[i+3],PI/tf,t);      // Calculate Sinusoid Trajectory
-      board2.setPWM(i, 0, angleToPulse(current_angle_RC));                   // Angle for the left side
+      int CoxaTrueTargAngle = turn == -1 ? CoxaTargAngle : convert4symmetry(CoxaTargAngle);
+      current_angle_RC = sinusoid(CoxaTrueTargAngle,CoxaAngles[i+3],PI/tf,t); // Calculate Sinusoid Trajectory
+      board2.setPWM(i, 0, angleToPulse(current_angle_RC));                        // Angle for the left side
+      CoxaAngles[i+3]=current_angle_RC;
       //Serial.print("RC:");
       //Serial.println(current_angle_RC); 
     }
-    for(int i = FemurAddressStart+!group; i < TibiaAddressStart; i += 2) {    // Set all my R_Femur Servos to the specified angle
-      current_angle_RF = sinusoid(convert4symmetry(FemurTargAngle),FemurAngles[i],PI/tf,t);    // Calculate Sinusoid Trajectory
-      board2.setPWM(i, 0, angleToPulse(current_angle_RF));                   // Angle for the left side
+    for(int i = FemurAddressStart+!group; i < TibiaAddressStart; i += 2) {        // Set all my R_Femur Servos to the specified angle
+      current_angle_RF = sinusoid(convert4symmetry(FemurTargAngle),FemurAngles[i],PI/tf,t); // Calculate Sinusoid Trajectory
+      board2.setPWM(i, 0, angleToPulse(current_angle_RF));                        // Angle for the left side
+      FemurAngles[i]=current_angle_RF;
       //Serial.print("RF:");
       //Serial.println(current_angle_RF); 
     }
-    for(int i = TibiaAddressStart+!group; i < TibiaAddressEnd; i += 2) {      // Set all my R_Tibia Servos to the specified angle
-      current_angle_RT = sinusoid(convert4symmetry(TibiaTargAngle),TibiaAngles[i-3],PI/tf,t);    // Calculate Sinusoid Trajectory
-      board2.setPWM(i, 0, angleToPulse(current_angle_RT));                   // Angle for the left side
+    for(int i = TibiaAddressStart+!group; i < TibiaAddressEnd; i += 2) {          // Set all my R_Tibia Servos to the specified angle
+      current_angle_RT = sinusoid(convert4symmetry(TibiaTargAngle),TibiaAngles[i-3],PI/tf,t); // Calculate Sinusoid Trajectory
+      board2.setPWM(i, 0, angleToPulse(current_angle_RT));                          // Angle for the left side
+      TibiaAngles[i-3]=current_angle_RT; 
       //Serial.print("RT:");
       //Serial.println(current_angle_RT);
     }
-    for(int i = CoxaAddressStart+group; i < FemurAddressStart; i += 2) {     // Set all my L_Coxa Servos to the specified angle
-      CoxaAngles[i]=current_angle_LC;
-    }
-    for(int i = FemurAddressStart+group; i < TibiaAddressStart; i += 2) {    // Set all my L_Femur Servos to the specified angle
-      FemurAngles[i-3]=current_angle_LF;
-    }
-    for(int i = TibiaAddressStart+group; i < TibiaAddressEnd; i += 2) {      // Set all my L_Tibia Servos to the specified angle
-      TibiaAngles[i-6]=current_angle_LT;
-    }
-    for(int i = CoxaAddressStart+!group; i < FemurAddressStart; i += 2) { // Set all my R_Coxa Servos to the specified angle
-      CoxaAngles[i+3]=current_angle_RC;
-    }
-    for(int i = FemurAddressStart+!group; i < TibiaAddressStart; i += 2) {    // Set all my R_Femur Servos to the specified angle
-      FemurAngles[i]=current_angle_RF;
-    }
-    for(int i = TibiaAddressStart+!group; i < TibiaAddressEnd; i += 2) {      // Set all my R_Tibia Servos to the specified angle
-      TibiaAngles[i-3]=current_angle_RT; 
+    delay(17);
+  }
+}
+
+// Moves two groups of motors in a tripod gait in sync to speed up walk cycle
+void pwm_response_UNISON_Group(float qf1[3], float qf2[3], float period) { // Group 0 - L1; Group 1 - L2 
+  // initial, final time and real time variable
+  float tf = period, current_angle_LC, current_angle_RC, current_angle_LF, current_angle_RF, current_angle_LT, current_angle_RT, t;
+  // steps for linspace resolution
+  int steps = (int)(tf*60);
+  // evaluate sinusoid at times for plotting
+
+  float qf[2][3] = {
+                      {qf1[0], qf1[1], qf1[2]},  // Group 1
+                      {qf2[0], qf2[1], qf2[2]},  // Group 2
+                    };
+
+  for (int s = 0; s < steps; s++) {
+    t = s*0.0167; // 1/60 Approx. 0.016666...
+    Serial.println("Cycle Start");
+    for (int group = 0; group < 2; group++) {
+      // Left Side of Hexapod (Coxa, Femur and Tibia)
+      for(int i = CoxaAddressStart+group; i < FemurAddressStart; i += 2) {     // Set all my L_Coxa Servos to the specified angle
+        current_angle_LC = sinusoid(qf[group][0],CoxaAngles[i],PI/tf,t);      // Calculate Sinusoid Trajectory
+        board1.setPWM(i, 0, angleToPulse(current_angle_LC));                   // Angle for the left side
+        CoxaAngles[i]=current_angle_LC;
+        //Serial.print("LC:");
+        //Serial.println(current_angle_LC);
+      }
+      for(int i = FemurAddressStart+group; i < TibiaAddressStart; i += 2) {    // Set all my L_Femur Servos to the specified angle
+        current_angle_LF = sinusoid(qf[group][1],FemurAngles[i-3],PI/tf,t);    // Calculate Sinusoid Trajectory
+        board1.setPWM(i, 0, angleToPulse(current_angle_LF));                   // Angle for the left side 
+        FemurAngles[i-3]=current_angle_LF;
+        //Serial.print("LF:");
+        //Serial.println(FemurAngles[i]);
+        //Serial.println(current_angle_LF);
+      }
+      for(int i = TibiaAddressStart+(1-group); i < TibiaAddressEnd; i += 2) {      // Set all my L_Tibia Servos to the specified angle
+        current_angle_LT = sinusoid(qf[group][2],TibiaAngles[i-6],PI/tf,t);    // Calculate Sinusoid Trajectory
+        board1.setPWM(i, 0, angleToPulse(current_angle_LT));                   // Angle for the left side 
+        TibiaAngles[i-6]=current_angle_LT;
+        //Serial.print("LT:");
+        //Serial.println(current_angle_LT);
+      }
+
+      // Right Side of Hexapod (Coxa, Femur and Tibia)
+      for(int i = CoxaAddressStart+(1-group); i < FemurAddressStart; i += 2) { // Set all my R_Coxa Servos to the specified angle
+        current_angle_RC = sinusoid(convert4symmetry(qf[group][0]),CoxaAngles[i+3],PI/tf,t);      // Calculate Sinusoid Trajectory
+        board2.setPWM(i, 0, angleToPulse(current_angle_RC));                   // Angle for the left side
+        CoxaAngles[i+3]=current_angle_RC;
+        //Serial.print("RC:");
+        //Serial.println(current_angle_RC); 
+      }
+      for(int i = FemurAddressStart+(1-group); i < TibiaAddressStart; i += 2) {    // Set all my R_Femur Servos to the specified angle
+        current_angle_RF = sinusoid(convert4symmetry(qf[group][1]),FemurAngles[i],PI/tf,t);    // Calculate Sinusoid Trajectory
+        board2.setPWM(i, 0, angleToPulse(current_angle_RF));                   // Angle for the left side
+        FemurAngles[i]=current_angle_RF;
+        //Serial.print("RF:");
+        //Serial.println(current_angle_RF);
+      }
+      for(int i = TibiaAddressStart+!group; i < TibiaAddressEnd; i += 2) {      // Set all my R_Tibia Servos to the specified angle
+        current_angle_RT = sinusoid(convert4symmetry(qf[group][2]),TibiaAngles[i-3],PI/tf,t);    // Calculate Sinusoid Trajectory
+        board2.setPWM(i, 0, angleToPulse(current_angle_RT));                   // Angle for the left side
+        TibiaAngles[i-3]=current_angle_RT; 
+        //Serial.print("RT:");
+        //Serial.println(current_angle_RT);
+      }
     }
     delay(17);
   }
@@ -352,4 +453,12 @@ void dispmatrixrows(char name[6][3], float matrix[6]) {
     }
     Serial.println(matrix[i]); 
   }
+}
+
+void print_servo_state(float target[3], const char* label) {
+  Serial.println(label);
+  Serial.println("Joint  | Before | Target");
+  Serial.print("Coxa   | "); Serial.print(CoxaAngles[0]); Serial.print(" | "); Serial.println(target[0]);
+  Serial.print("Femur  | "); Serial.print(FemurAngles[0]); Serial.print(" | "); Serial.println(target[1]);
+  Serial.print("Tibia  | "); Serial.print(TibiaAngles[0]); Serial.print(" | "); Serial.println(target[2]);
 }
