@@ -6,43 +6,98 @@
 #define MAX_Controller_Val 1024
 #define PI 3.141592
 
-#define D0 0
-#define D1 1
-#define D2 2
-#define D3 3
-#define D4 4
+#define RED_LED A0 
+#define YELLOW_LED 10
+#define GREEN_LED A1
 
-float frontback1, leftright1;
-int magnitude_1, angle_1;
+#define Joy_Vert_Left A3
+#define Joy_Horz_Left A2
+#define Joy_Vert_Right A4
+#define Joy_Horz_Right A5
+#define Joy_Button_Left 4
+#define Joy_Button_Right 2
 
-RF24 radio(8,7);                        /* Creating instance 'radio'  ( CE , CSN )   CE -> D7 | CSN -> D8 */                              
+#define Upper_Button 6
+#define Lower_Button 5
+
+#define Controller_LED 3
+
+float frontback_L, leftright_L, frontback_R, leftright_R;
+int magnitude_movement, angle_movement, operation_mode, left_joy_button, right_joy_button;
+
+RF24 radio(8,7,0);                        /* Creating instance 'radio'  ( CE , CSN )   CE -> D7 | CSN -> D8 */                              
 const byte Address[6] = "00009" ;     /* Address to which data to be transmitted*/
-int value = 0;
+int value = 0, lightcycle = 0, LB = 0, RB = 0;
+bool success = 0;
+int sign = 1;                    // Assume sign is positive upon initialisation
 
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
-  radio.begin ();                  /* Activate the modem*/
-  radio.openWritingPipe (Address); /* Sets the address of transmitter to which program will send the data */
   Serial.print("Check");
 
+  // Pin Definitions
+  pinMode(RED_LED, OUTPUT);       // Red LED
+  pinMode(YELLOW_LED, OUTPUT);    // Yellow LED
+  pinMode(GREEN_LED, OUTPUT);     // Green LED
+
+  // For all my buttons
+  pinMode(Joy_Button_Right, INPUT_PULLUP);
+  pinMode(Controller_LED, OUTPUT);             // This is for the LED
+  pinMode(Joy_Button_Left, INPUT_PULLUP);
+  pinMode(Lower_Button, INPUT);
+  pinMode(Upper_Button, INPUT);
+
+  // Joystick PinMode Initialisation
+  const int  pins[]  = {A2, A3, A4, A5};
+  const char* names[] = {"A2", "A3", "A4","A5"};
+  const int  count   = sizeof(pins) / sizeof(pins[0]);
+
+  for (int i = 0; i < count; i++) {
+    pinMode(pins[i], INPUT);
+  }
+
+  // Cool Startup Sequence
+  LEDstartup();
+
+  radio.begin();                  /* Activate the modem*/
+  radio.openWritingPipe(Address); /* Sets the address of transmitter to which program will send the data */
+  radio.stopListening();          /* Setting modem in transmission mode*/
+
+  /*
+  radio.setRetries(1, 1);
+  radio.startFastWrite(&value, sizeof(value), 0);
+
+  while (success == 0) {
+    LEDLightCycle();
+    delay(200);
+    if (radio.txStandBy()) {  // non-blocking check if write completed
+      success = 1;
+    } else {
+      radio.startFastWrite(&value, sizeof(value), 0);  // retry
+    }
+  }
+  */
 }
 
 void loop() {
-  frontback1 = checksmall((MAX_Controller_Val/2)-analogRead(A1));
-  leftright1 = checksmall(analogRead(A0)-(MAX_Controller_Val/2));
-  magnitude_1 = magnitude(leftright1,frontback1);
-  angle_1 = angle(leftright1,frontback1,magnitude_1);
+  frontback_R = checksmall((MAX_Controller_Val/2)-analogRead(Joy_Vert_Right));
+  leftright_R = checksmall(analogRead(Joy_Horz_Right)-(MAX_Controller_Val/2));
 
+  frontback_L = checksmall((MAX_Controller_Val/2)-analogRead(Joy_Vert_Left));
+  leftright_L = checksmall(analogRead(Joy_Horz_Left)-(MAX_Controller_Val/2));
+
+  magnitude_movement = magnitude(leftright_R,frontback_R);
+  angle_movement = angle(leftright_R,frontback_R,magnitude_movement);
   //debugPrintGPIO();
+  //Serial.println(operation_mode);
+  UpdateGPIO();
 
   // Pack my values for transmission
-  value = angle_1*10 + magnitude_1;
+  value = sign * (angle_movement*10 + magnitude_movement) ;
   // put your main code here, to run repeatedly:
-  radio.stopListening();                           /* Setting modem in transmission mode*/
-  bool success = radio.write(&value, sizeof(value));                 /* Sending data over NRF 24L01*/
-  Serial.print("Transmitting Data : ");
-  Serial.println(value);                             /* Printing POT value on serial monitor*/
+  radio.write(&value, sizeof(value));
+  //Serial.print(value);
 
   //Serial.println(success ? "Send OK" : "Send FAILED");
 } 
@@ -94,26 +149,89 @@ int angle(float x, float y, int magnitude) {
   }
 
   if (angle > 0) {
-    angle = 180 - angle;
+    angle = 180 - angle; sign = -1;
   } 
   else {
-    angle = 180 + angle;
+    angle = 180 + angle; sign = 1;
   }
-         
+
   return angle;
 }
 
+void UpdateGPIO() {
+  right_joy_button = digitalRead(Joy_Button_Right);
+  left_joy_button  = digitalRead(Joy_Button_Left);
+  LB = digitalRead(Lower_Button);
+  RB = digitalRead(Upper_Button);
+
+  if (LB == 1 && RB == 0) {
+    operation_mode = 1;
+    digitalWrite(RED_LED, 1);
+    digitalWrite(YELLOW_LED, 0);
+    digitalWrite(GREEN_LED, 0);
+  }
+  else if (LB == 0 && RB == 1) {
+    operation_mode = 2;
+    digitalWrite(RED_LED, 0);
+    digitalWrite(YELLOW_LED, 1);
+    digitalWrite(GREEN_LED, 0);
+  }
+  else {
+    operation_mode = 0;
+    digitalWrite(RED_LED, 0);
+    digitalWrite(YELLOW_LED, 0);
+    digitalWrite(GREEN_LED, 1);
+  }
+
+}
+
+void LEDstartup() {
+  LEDblink();
+  LEDblink();
+}
+
+void LEDblink() {
+  digitalWrite(RED_LED, 0);
+  digitalWrite(YELLOW_LED,0);
+  digitalWrite(GREEN_LED,0);
+  delay(500);
+  digitalWrite(RED_LED, 1);
+  digitalWrite(YELLOW_LED,1);
+  digitalWrite(GREEN_LED,1);
+  delay(500);
+}
+
+void LEDLightCycle() {
+  if (lightcycle == 0) {
+    digitalWrite(RED_LED, 1);
+    digitalWrite(YELLOW_LED,0);
+    digitalWrite(GREEN_LED,0);
+    lightcycle = lightcycle + 1;
+  }
+  else if (lightcycle == 1) {
+    digitalWrite(RED_LED, 0);
+    digitalWrite(YELLOW_LED,1);
+    digitalWrite(GREEN_LED,0);
+    lightcycle = lightcycle + 1;
+  }
+  else {
+    digitalWrite(RED_LED, 0);
+    digitalWrite(YELLOW_LED,0);
+    digitalWrite(GREEN_LED,1);
+    lightcycle = 0;
+  }
+  Serial.println(lightcycle);
+  delay(500);
+}
+
 void debugPrintGPIO() {
-  const int  pins[]  = {A0, A1, A2, A3, A4};
-  const char* names[] = {"D0", "D1", "D2", "D3", "D4"};
+  const int  pins[]  = {A0, A1, A2, A3, A4, A5};
+  const char* names[] = {"A0", "A1", "A2", "A3", "A4","A5"};
   const int  count   = sizeof(pins) / sizeof(pins[0]);
 
   for (int i = 0; i < count; i++) {
     pinMode(pins[i], INPUT);
   }
-  pinMode(6, INPUT);
-  pinMode(4, INPUT);
-  pinMode(5, INPUT);
 
   Serial.print("GPIO: ");
   for (int i = 0; i < count; i++) {
@@ -122,11 +240,16 @@ void debugPrintGPIO() {
     Serial.print(analogRead(pins[i]));
     if (i < count - 1) Serial.print("  ");
   }
-  Serial.print("D2 =");
-  Serial.print(digitalRead(6));
-  Serial.print("D3 =");
+  Serial.print("D2 = ");
+  Serial.print(digitalRead(2));
+  Serial.print(" D3 = ");
+  Serial.print(digitalRead(3));
+  Serial.print(" D4 = ");
   Serial.print(digitalRead(4));
-  Serial.print("D4 =");
+  Serial.print(" D5 = ");
   Serial.print(digitalRead(5));
+  Serial.print(" D6 = ");
+  Serial.print(digitalRead(6));
   Serial.println();
 }
+
