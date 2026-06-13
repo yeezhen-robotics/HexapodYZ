@@ -1,0 +1,49 @@
+.. _master_sketches:
+
+=====================================
+Learning How to Make Master Sketches
+=====================================
+
+A **master sketch** (sometimes called a "skeleton sketch") is a top-level 2-D sketch that
+encodes the key dimensional constraints of an entire assembly. Child components reference
+dimensions from the master sketch rather than having hard-coded numbers. When a critical
+dimension changes — say, the body length or the leg attachment pitch — updating a single value
+in the master sketch cascades the change through every dependent part automatically.
+
+Why Master Sketches Matter
+---------------------------
+
+Without a master sketch, changing a shared dimension such as the servo-mounting hole spacing
+requires manually editing every component that references it. On a hexapod with six identical
+legs and twelve symmetric mounting interfaces, this is error-prone and time-consuming. The
+master-sketch approach converts a tedious global search-and-replace into a single parameter
+update.
+
+The master sketch for this project encoded:
+
+- Overall body length and width.
+- Leg attachment point positions (pitch circle radius and angular spacing).
+- Servo-horn offset distances for each joint.
+- Tibia tip contact point positions at nominal stance.
+
+Structure of the Master Sketch
+--------------------------------
+
+The master sketch was a single 2-D sketch placed at the assembly origin. It contained:
+
+1. **Construction geometry only** — all lines and arcs were marked as construction geometry
+   so they did not generate solid faces. The sketch exists purely as a dimensional backbone.
+2. **Named dimensions** — every key measurement was assigned a descriptive name (e.g.
+   ``body_length``, ``coxa_length``, ``servo_offset_femur``) so that the parametric
+   relationships remained readable.
+3. **Symmetry constraints** — left/right and front/rear mirror constraints were applied so
+   that only one quadrant of the robot needed to be specified explicitly.
+
+Practical Lessons
+------------------
+
+Building the master sketch before modelling any parts proved to be the single most impactful
+process decision of the CAD phase. The three design iterations described in the next section
+were feasible in a reasonable timeframe precisely because dimension changes propagated
+automatically. Without it, each iteration would have required rebuilding several parts from
+scratch.

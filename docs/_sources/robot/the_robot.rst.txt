@@ -1,0 +1,136 @@
+.. _the_robot:
+
+==========
+The Robot
+==========
+
+.. raw:: html
+
+   <div style="display: flex; align-items: flex-start; gap: 2rem; margin-bottom: 2rem;">
+
+     <!-- LEFT: text -->
+     <div style="flex: 1;">
+
+The hexapod robot is the central artefact of this project. It consists of a central body
+frame, six identical leg assemblies, an electronics bay, and an antenna mast — all fabricated
+from 3-D printed PLA components bolted together with M3 hardware.
+
+Each leg has three degrees of freedom, actuated by hobby-grade servo motors:
+
+- **Coxa joint** — rotates the leg horizontally about a vertical axis, controlling the
+  sweep angle.
+- **Femur joint** — lifts the leg up and down relative to the body plane.
+- **Tibia joint** — extends or retracts the lower leg segment, controlling foot reach.
+
+The body houses the main microcontroller, power-distribution board, and receiver module in
+a compact electronics bay accessible via a removable lid panel. The centre of mass was
+deliberately kept low by positioning the heaviest components (battery pack, power board)
+at the base of the body cavity.
+
+Mechanically, the robot weighs approximately **XX g** (replace), spans **XX mm** tip-to-tip
+across opposing legs, and stands **XX mm** tall in its nominal stance.
+
+.. raw:: html
+
+     </div>
+
+     <!-- RIGHT: Robot image placeholder -->
+     <div style="flex: 0 0 auto;">
+
+.. Note on the image below:
+   - Replace ``_static/hexapod_robot.jpg`` with your robot photograph.
+   - Adjust ``:width:`` to balance with the text column (e.g. ``380px``).
+   - To crop, use the raw-HTML ``<div>`` overflow technique described in ``how_did_i_do_it``.
+
+.. figure:: /_static/hexapod_robot.jpg
+   :width: 380px
+   :align: right
+   :alt: Assembled hexapod robot
+
+   *Assembled hexapod — replace with your own photograph.*
+
+.. raw:: html
+
+     </div>
+   </div>
+
+Bill of Materials — Robot
+--------------------------
+
+.. note::
+   Replace the placeholder cells below with your actual component names, part numbers,
+   quantities, suppliers, and unit costs. Add or remove rows as needed.
+
+**Mechanical Components**
+
+.. list-table::
+   :widths: 30 20 15 20 15
+   :header-rows: 1
+
+   * - Component
+     - Part / Model
+     - Qty
+     - Supplier
+     - Unit Cost
+   * - A — Body frame (3-D printed)
+     - *TBD*
+     - *TBD*
+     - *TBD*
+     - *TBD*
+   * - B — Coxa link (per leg)
+     - *TBD*
+     - *TBD*
+     - *TBD*
+     - *TBD*
+   * - C — Femur link (per leg)
+     - *TBD*
+     - *TBD*
+     - *TBD*
+     - *TBD*
+   * - D — Tibia link (per leg)
+     - *TBD*
+     - *TBD*
+     - *TBD*
+     - *TBD*
+   * - E — Fasteners / hardware
+     - *TBD*
+     - *TBD*
+     - *TBD*
+     - *TBD*
+
+**Electrical Components**
+
+.. list-table::
+   :widths: 30 20 15 20 15
+   :header-rows: 1
+
+   * - Component
+     - Part / Model
+     - Qty
+     - Supplier
+     - Unit Cost
+   * - A — Servo motors
+     - *TBD*
+     - 18
+     - *TBD*
+     - *TBD*
+   * - B — Main MCU
+     - *TBD*
+     - *TBD*
+     - *TBD*
+     - *TBD*
+   * - C — Power distribution board
+     - *TBD*
+     - *TBD*
+     - *TBD*
+     - *TBD*
+   * - D — Antenna / receiver module
+     - *TBD*
+     - *TBD*
+     - *TBD*
+     - *TBD*
+   * - E — LiPo battery pack
+     - *TBD*
+     - *TBD*
+     - *TBD*
+     - *TBD*

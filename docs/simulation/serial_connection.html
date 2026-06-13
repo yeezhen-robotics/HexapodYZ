@@ -1,0 +1,418 @@
+
+<!DOCTYPE html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    
+    <meta name="docsearch:name" content="Hexapod Documentation" />
+    <meta name="docsearch:package_type" content="" />
+    <meta name="docsearch:release" content="1.0" />
+    <meta name="docsearch:version" content="" />
+    
+      <meta name="theme-color" content="#0DCAF0" />
+    
+    
+      <title>Connecting a Serial Port to CoppeliaSim via Arduino &mdash; Hexapod Documentation 1.0 documentation</title>
+    
+    <link rel="canonical" href="simulation/serial_connection" />
+          <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" /><!-- add (1) -->
+          <link rel="stylesheet" type="text/css" href="../_static/fonts\nunito\stylesheet.css?v=abf98f06" /><!-- add (1) -->
+          <link rel="stylesheet" type="text/css" href="../_static/fonts\ubuntu-sans-mono\stylesheet.css?v=8616a587" /><!-- add (1) -->
+          <link rel="stylesheet" type="text/css" href="../_static/pygments-dark.css?v=2de69186" /><!-- add (1) -->
+          <link rel="stylesheet" type="text/css" href="../_static/pygments-light.css?v=970f37b1" /><!-- add (1) -->
+          <link rel="stylesheet" type="text/css" href="../_static/bootstrap-icons.min.css?v=44730005" /><!-- add (1) -->
+          <link rel="stylesheet" type="text/css" href="../_static/sphinx-nefertiti-default.min.css?v=88df5cc9" /><!-- add (1) -->
+        <link rel="index" title="Index" href="../genindex.html" />
+        <link rel="search" title="Search" href="../search.html" />
+        <link rel="top" title="Hexapod Documentation 1.0 documentation" href="#" />
+        <link rel="up" title="Simulation" href="index.html" />
+        <link rel="next" title="What CoppeliaSim Taught Me" href="lessons_learned.html" />
+        <link rel="prev" title="Using CoppeliaSim" href="using_coppeliasim.html" />
+    <style>
+      :root {
+        --nftt-body-font-family: "Nunito", var(--nftt-font-sans-serif) !important;
+        --nftt-font-monospace: "Ubuntu Sans Mono", var(--nftt-font-family-monospace) !important;
+        --nftt-project-name-font: var(--nftt-body-font-family);
+        --nftt-documentation-font: var(--nftt-body-font-family);
+        --nftt-doc-headers-font: "Georgia", var(--nftt-documentation-font);}
+    </style>
+  </head>
+  <body>
+    <div id="back-to-top-container" class="position-fixed start-50 translate-middle-x">
+      <button id="back-to-top" type="button" class="d-none btn btn-neutral btn-sm shadow px-4" data-bs-toggle="button">Back to top</button>
+    </div>
+    <header id="snftt-nav-bar" class="navbar navbar-expand-xl navbar-dark nftt-navbar flex-column fixed-top">
+      <div class="skip-links container-fluid visually-hidden-focusable overflow-hidden justify-content-start flex-grow-1">
+        <div class="border-bottom mb-2 pb-2 w-100">
+          <a class="d-none d-md-inline-flex p-2 m-1" href="#sidebar-filter">Skip to index filter</a>
+          <a class="d-inline-flex p-2 m-1" href="#content">Skip to main content</a>
+        </div>
+      </div>
+      <nav class="container-xxl nftt-gutter flex-nowrap" aria-label="Main navigation">
+        <div class="nftt-navbar-toggler">
+          <button class="navbar-toggler p-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar" aria-controls="sidebar" aria-label="Toggle documentation navigation">
+            <i class="bi bi-list"></i>
+          </button>
+        </div>
+          <a href="../index.html"
+             class="navbar-brand"
+          ><span class="brand-text">Hexapod Documentation</span><span class="brand-short-text">Hexapod Documentation</span></a>
+        
+        
+        <div class="d-flex d-xl-none">
+          <button class="navbar-toggler p-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#nfttSearch" aria-controls="nfttSearch" aria-label="Search">
+            <i class="bi bi-search"></i>
+          </button>
+          <button class="navbar-toggler p-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#nfttNavbar" aria-controls="nfttNavbar" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+        </div>
+        
+<div class="offcanvas-xl offcanvas-end flex-grow-1" tabindex="-1" id="nfttSearch" aria-labelledby="nfttSearchOffcanvasLabel" data-bs-scroll="true">
+  <div class="offcanvas-header px-4 pb-0">
+    <h5 class="offcanvas-title fw-bold" id="nfttSearchOffcanvasLabel">Search the documentation</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close" data-bs-target="#nfttSearch"></button>
+  </div>
+  <div class="offcanvas-body p-4 pt-0 p-xl-0 ps-xl-4">
+    <hr class="d-xl-none text-white-50">
+    <ul class="navbar-nav flex-row align-items-center flex-wrap ms-md-auto">
+      <li class="nav-item col-12 col-xl-auto">
+        <form id="nftt-search-form" action="../search.html" method="get">
+          <div class="input-group">
+            <input type="text" name="q" class="form-control search-input" placeholder="Search" aria-label="Search" aria-describedby="button-search">
+            <input type="hidden" name="check_keywords" value="yes" />
+            <input type="hidden" name="area" value="default" />
+            <button class="btn btn-primary" type="submit" id="button-search" aria-label="Search"><i class="bi bi-search"></i></button>
+          </div>
+        </form>
+      </li>
+    </ul>
+  </div>
+</div>
+
+        <div class="offcanvas-xl offcanvas-end" tabindex="-1" id="nfttNavbar" aria-labelledby="nfttNavbarOffcanvasLabel" data-bs-scroll="true">
+          <div class="offcanvas-header px-4 pb-0">
+            <div class="offcanvas-title navbar-brand" id="nfttNavbarOffcanvasLabel"><span class="brand-short-text">Hexapod Documentation</span></div>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close" data-bs-target="#nfttNavbar"></button>
+          </div>
+          <div class="offcanvas-body p-4 pt-0 p-xl-0 px-xl-3">
+            <hr class="d-xl-none text-white-50">
+            <ul class="navbar-nav flex-row align-items-center flex-wrap ms-lg-auto">
+              
+              
+              
+              
+              
+              <!-- lightdark-dropdown.html -->
+<li class="nav-item dropdown">
+  <a class="nav-link d-flex py-2 px-0 px-xl-2 dropdown-toggle align-items-center" id="snftt-luz" href="#" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false" aria-label="Change appearance">
+    <i class="bi bi-circle-half" data-snftt-luz-icon-active></i>
+    <span id="snftt-luz-text" class="d-xl-none ms-2">Change appearance</span>
+  </a>
+  <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="snftt-luz-text">
+    <li>
+      <h6 class="dropdown-header">Change appearance</h6>
+    </li>
+    <li>
+      <a class="dropdown-item d-flex align-items-center" data-snftt-luz="light" href="#" aria-pressed="false">
+        <span>
+          <i class="bi bi-sun" data-snftt-luz-icon="light"></i>
+        </span>
+        <span class="ms-3">Light</span>
+        <i class="bi bi-check ms-auto"></i>
+      </a>
+    </li>
+    <li>
+      <a class="dropdown-item d-flex align-items-center" data-snftt-luz="dark" href="#" aria-pressed="false">
+        <span>
+          <i class="bi bi-moon-stars" data-snftt-luz-icon="dark"></i>
+        </span>
+        <span class="ms-3">Dark</span>
+        <i class="bi bi-check ms-auto"></i>
+      </a>
+    </li>
+    <li>
+      <a class="dropdown-item current d-flex align-items-center" data-snftt-luz="default" href="#" aria-pressed="false">
+        <span>
+          <i class="bi bi-circle-half" data-snftt-luz-icon="default"></i>
+        </span>
+        <span class="ms-3">Automatic</span>
+        <i class="bi bi-check ms-auto"></i>
+      </a>
+    </li>
+  </ul>
+</li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      
+    </header>
+
+    <div class="container-fluid">
+      <div class="nftt-gutter nftt-page">
+        <aside class="nftt-sidebar ">
+          <div class="nftt-sidebar-content">
+            
+            <div class="title d-none d-xl-none">
+              <i class="bi bi-book"></i>&nbsp;&nbsp;<span>Index</span>
+            </div>
+            <div id="sidebar" tabindex="-1" class="offcanvas-xl offcanvas-start" aria-labelledby="nfttSidebarOffcanvasLabel">
+                <!-- sidebartemplate: "globaltoc.html" --><div class="offcanvas-header border-bottom">
+  <h5 class="offcanvas-title fw-bold" id="nfttSidebarOffcanvasLabel">
+    Index
+  </h5>
+  <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close" data-bs-target="#sidebar"></button>
+</div>
+
+<div class="offcanvas-body">
+  <nav class="toc" aria-label="Main menu">
+    <div class="mb-3 p-1 pb-4 border-bottom">
+      <input id="sidebar-filter" type="text" name="filter" class="form-control form-control-sm" placeholder="index filter" aria-label="index filter">
+    </div>
+    <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../introduction/index.html">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../introduction/what_is_this_project.html">What Is This Project?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../introduction/why_this_project.html">Why This Project?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../introduction/how_did_i_do_it.html">How Did I Do It?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../introduction/timelines.html">Timelines</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../robot/index.html">The Robot</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../robot/the_controller.html">The Controller</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../robot/the_robot.html">The Robot</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Simulation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="using_coppeliasim.html">Using CoppeliaSim</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Connecting a Serial Port to CoppeliaSim via Arduino</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lessons_learned.html">What CoppeliaSim Taught Me</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../cad_design_process/index.html">CAD Design Process</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cad_design_process/master_sketches.html">Learning How to Make Master Sketches</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cad_design_process/design_versions.html">3 Versions of Design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cad_design_process/final_model.html">Coming to the Final Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cad_design_process/design_explanation.html">Explanation on the Design</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../cad_design_intro/index.html">CAD Design Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cad_design_intro/body.html">Body</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cad_design_intro/legs.html">Legs — Coxa, Femur, Tibia</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cad_design_intro/mounts.html">Mounts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cad_design_intro/controller_cad.html">Controller</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../electronics/index.html">Electronics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../electronics/servos.html">Servos</a></li>
+</ul>
+</li>
+</ul>
+
+  </nav>
+  <template data-toggle-item-template>
+    <button class="btn btn-sm btn-link toctree-expand" type="button">
+      <i class="bi bi-caret-right"></i>
+      <span class="visually-hidden">Toggle menu contents</span>
+    </button>
+  </template>
+</div>
+            </div>
+            
+          </div>
+        </aside>
+        <article id="content" class="nftt-content" role="main">
+          <div><div class="d-flex flex-row justify-content-between">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="../index.html">Start</a></li>
+        <li class="breadcrumb-item"><a href="index.html">Simulation</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Connecting a Serial Port to CoppeliaSim via Arduino</li>
+    </ol>
+  </nav>
+  
+    <div class="fs085">
+        <a href="../_sources/simulation/serial_connection.rst.txt"  rel="nofollow" aria-label="Show source of this document"><i class="bi bi-file-earmark-code"></i></a>
+    </div>
+  
+</div>
+            
+    <section id="connecting-a-serial-port-to-coppeliasim-via-arduino">
+<span id="serial-connection"></span><h1>Connecting a Serial Port to CoppeliaSim via Arduino<a class="headerlink" href="#connecting-a-serial-port-to-coppeliasim-via-arduino" title="Link to this heading">¶</a></h1>
+<p>One of the most valuable aspects of the simulation workflow was the ability to drive the
+virtual hexapod with the same Arduino firmware that would later run on the physical robot.
+This was achieved by routing serial communication between the Arduino and CoppeliaSim through
+the host PC’s USB-serial interface.</p>
+<section id="architecture">
+<h2>Architecture<a class="headerlink" href="#architecture" title="Link to this heading">¶</a></h2>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[ Arduino (physical hardware) ]
+         |  USB / Serial (115 200 baud)
+         v
+[ Host PC — serial bridge script (Python) ]
+         |  TCP socket / CoppeliaSim Remote API
+         v
+[ CoppeliaSim — Lua child script on robot model ]
+</pre></div>
+</div>
+<p>The Python bridge script opened the COM port exposed by the Arduino, decoded the incoming
+command frames, and forwarded servo-angle setpoints to the CoppeliaSim remote API using the
+<code class="docutils literal notranslate"><span class="pre">sim.setJointTargetPosition()</span></code> call. The round-trip latency (Arduino → bridge → simulator)
+was measured at approximately <strong>X ms</strong> on the development machine — well within the
+20 ms control cycle budget.</p>
+</section>
+<section id="serial-frame-format">
+<h2>Serial Frame Format<a class="headerlink" href="#serial-frame-format" title="Link to this heading">¶</a></h2>
+<p>Each command frame transmitted by the Arduino had the following structure:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>| START (0xAA) | LEG_ID (0–5) | COXA_ANGLE | FEMUR_ANGLE | TIBIA_ANGLE | CHECKSUM |
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">START</span></code> — a fixed sync byte used by the receiver to detect frame boundaries.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LEG_ID</span></code> — identifies which of the six legs the angles apply to (0 = front-left, …, 5 = rear-right).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">COXA/FEMUR/TIBIA_ANGLE</span></code> — signed 8-bit integers encoding joint angles in units of 1°, offset so 0 = neutral.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CHECKSUM</span></code> — XOR of all preceding bytes; the receiver discards frames with a checksum mismatch.</p></li>
+</ul>
+</section>
+<section id="python-bridge-script-excerpt">
+<h2>Python Bridge Script (Excerpt)<a class="headerlink" href="#python-bridge-script-excerpt" title="Link to this heading">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">serial</span><span class="o">,</span><span class="w"> </span><span class="nn">struct</span><span class="o">,</span><span class="w"> </span><span class="nn">time</span>
+<span class="c1"># Replace &#39;COM3&#39; / &#39;/dev/ttyUSB0&#39; with your actual port</span>
+<span class="n">ser</span> <span class="o">=</span> <span class="n">serial</span><span class="o">.</span><span class="n">Serial</span><span class="p">(</span><span class="s1">&#39;COM3&#39;</span><span class="p">,</span> <span class="mi">115200</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">read_frame</span><span class="p">(</span><span class="n">ser</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Block until a valid START byte is found, then read the rest of the frame.&quot;&quot;&quot;</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">byte</span> <span class="o">=</span> <span class="n">ser</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">byte</span> <span class="o">==</span> <span class="sa">b</span><span class="s1">&#39;</span><span class="se">\xaa</span><span class="s1">&#39;</span><span class="p">:</span>
+            <span class="n">payload</span> <span class="o">=</span> <span class="n">ser</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>           <span class="c1"># LEG_ID + 3 angles + checksum</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
+                <span class="n">leg</span><span class="p">,</span> <span class="n">coxa</span><span class="p">,</span> <span class="n">femur</span><span class="p">,</span> <span class="n">tibia</span><span class="p">,</span> <span class="n">chk</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;5b&#39;</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
+                <span class="k">if</span> <span class="p">(</span><span class="mh">0xaa</span> <span class="o">^</span> <span class="n">leg</span> <span class="o">^</span> <span class="n">coxa</span> <span class="o">^</span> <span class="n">femur</span> <span class="o">^</span> <span class="n">tibia</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xff</span> <span class="o">==</span> <span class="n">chk</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">leg</span><span class="p">,</span> <span class="n">coxa</span><span class="p">,</span> <span class="n">femur</span><span class="p">,</span> <span class="n">tibia</span>
+    <span class="k">return</span> <span class="kc">None</span>
+
+<span class="c1"># Main loop — forward each valid frame to CoppeliaSim</span>
+<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="n">frame</span> <span class="o">=</span> <span class="n">read_frame</span><span class="p">(</span><span class="n">ser</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">frame</span><span class="p">:</span>
+        <span class="n">leg</span><span class="p">,</span> <span class="n">coxa</span><span class="p">,</span> <span class="n">femur</span><span class="p">,</span> <span class="n">tibia</span> <span class="o">=</span> <span class="n">frame</span>
+        <span class="c1"># sim.setJointTargetPosition() calls go here (CoppeliaSim remote API)</span>
+        <span class="k">pass</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.001</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Replace the CoppeliaSim remote-API calls (commented out above) with the actual
+<code class="docutils literal notranslate"><span class="pre">sim.setJointTargetPosition(handle,</span> <span class="pre">math.radians(angle))</span></code> invocations once you have
+obtained the joint handles for each leg in your scene.</p>
+</div>
+</section>
+</section>
+
+</div>
+        </article>
+        <aside class="nftt-toc">
+          
+          <div class="my-sm-1 my-lg-0 ps-xl-3 text-muted">
+            <button class="btn btn-link p-lg-0 mb-2 mb-lg-0 text-decoration-none nftt-toc-toggle d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#tocContents" aria-expanded="false" aria-controls="tocContents"
+            >On this page <i class="ms-2 bi bi-chevron-expand"></i></button>
+            <div class="title d-none d-lg-block">
+              <i class="bi bi-file-earmark-text"></i>&nbsp;&nbsp;<span class="small">On this page</span>
+            </div>
+            <div class="collapse nftt-toc-collapse" id="tocContents">
+              <nav id="TableOfContents">
+                <ul>
+<li><a class="reference internal" href="#">Connecting a Serial Port to CoppeliaSim via Arduino</a><ul>
+<li><a class="reference internal" href="#architecture">Architecture</a></li>
+<li><a class="reference internal" href="#serial-frame-format">Serial Frame Format</a></li>
+<li><a class="reference internal" href="#python-bridge-script-excerpt">Python Bridge Script (Excerpt)</a></li>
+</ul>
+</li>
+</ul>
+
+              </nav>
+            </div>
+          </div>
+          
+        </aside>
+      </div>
+    </div>
+
+    <footer class="nftt-footer">
+      <nav id="paginator" class="py-4" aria-label="Documentation navigation">
+    <div class="container">
+      <ul class="pagination justify-content-between mb-0"><li class="d-flex page-item">
+            <a href="using_coppeliasim.html" class="d-flex pe-5 px-lg-5 align-items-end" rel="prev" aria-label="Previous page: Using CoppeliaSim">
+              <span class="prev-page"><i class="bi bi-caret-left"></i></span>
+              <div class="d-none d-sm-flex flex-column">
+                <span class="text-small text-start text-muted">Previous</span>
+                <span class="underline">Using CoppeliaSim</span>
+              </div>
+            </a>
+          </li>
+        <li class="d-flex page-item ms-auto">
+            <a href="lessons_learned.html" class="d-flex ps-5 px-lg-5 align-items-end" rel="next" aria-label="Next page: What CoppeliaSim Taught Me">
+              <div class="d-flex flex-column">
+                <span class="text-small text-end text-start text-muted">Next</span>
+                <span class="underline">What CoppeliaSim Taught Me</span>
+              </div>
+              <span class="next-page"><i class="bi bi-caret-right"></i></span>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </nav>
+
+      <div class="py-5 px-4 px-md-3">
+  <div class="container">
+    
+
+    <div class="row">
+      <div class="col-lg-12 text-center">
+        <a class="brand-text d-inline-flex align-items-center mb-2 text-decoration-none" href="/" aria-label="Hexapod Documentation">
+          <span class="fs-6 fw-bold">Hexapod Documentation</span>
+        </a>
+        
+          <ul class="list-unstyled small text-muted">
+            <li>2026, Khoo Yee Zhen</li>
+          </ul>
+        
+        <div class="built-with pt-2">
+          Built with <a href="http://sphinx-doc.org">Sphinx 9.1.0</a> and <a href="https://github.com/danirus/sphinx-nefertiti">Nefertiti 0.9.8</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    </footer>
+
+    <div class="modal modal-xl fade" id="nftt-modal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-fullscreen-xxl-down modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="nftt-modal-title"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="nftt-modal-body">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+    <script src="../_static/documentation_options.js?v=f2a433a1"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/docs-versions.js?v=08b0cbfb"></script>
+    <script src="../_static/sphinx-nefertiti.min.js?v=f7f548f2"></script>
+    <script src="../_static/bootstrap.bundle.min.js?v=e96d90d1"></script>
+  </body>
+</html>

@@ -1,0 +1,55 @@
+.. _what_is_this_project:
+
+======================
+What Is This Project?
+======================
+
+.. raw:: html
+
+   <div style="display: flex; align-items: flex-start; gap: 2rem; margin-bottom: 2rem;">
+
+     <!-- LEFT: GIF placeholder -->
+     <div style="flex: 0 0 auto;">
+
+.. Note on the GIF below:
+   - Replace ``_static/hexapod_demo.gif`` with the path to your actual GIF file.
+   - Adjust ``:width:`` to control display size (e.g. ``400px``, ``50%``).
+   - Use ``:scale:`` (1–100) instead of width if you want a percentage of the original size.
+   - To crop/offset the image, wrap it in a ``.. raw:: html`` block with CSS
+     ``object-fit: cover`` and ``object-position`` on an ``<img>`` tag.
+
+.. figure:: /_static/hexapod_demo.gif
+   :width: 400px
+   :align: left
+   :alt: Hexapod robot walking demonstration
+
+   *Hexapod in motion — replace with your GIF.*
+
+.. raw:: html
+
+     </div>
+
+     <!-- RIGHT: text -->
+     <div style="flex: 1;">
+
+This project is a fully autonomous six-legged walking robot — a **hexapod** — designed and
+built from the ground up. The robot integrates custom mechanical linkages, embedded electronics,
+and real-time gait-control algorithms to achieve stable locomotion across a variety of surfaces.
+
+The hexapod is controlled by an onboard microcontroller that coordinates eighteen degrees of
+freedom (three servo-actuated joints per leg) in concert, producing smooth, bio-inspired
+movement patterns. An optional front-mounted camera module allows the operator to steer the
+robot remotely while receiving a live video feed.
+
+Key features of the project include:
+
+- **Custom CAD-designed frame** — every structural component was modelled in CAD and 3-D printed.
+- **Inverse kinematics engine** — analytical IK solves each leg's joint angles in real time.
+- **Tripod gait implementation** — alternating sets of three legs keep the robot statically stable at all times.
+- **Simulation-first workflow** — the gait was prototyped and validated in CoppeliaSim before any hardware was assembled.
+- **Wireless control** — an onboard antenna module provides low-latency telemetry and command reception.
+
+.. raw:: html
+
+     </div>
+   </div>

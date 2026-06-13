@@ -1,0 +1,485 @@
+
+<!DOCTYPE html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    
+    <meta name="docsearch:name" content="Hexapod Documentation" />
+    <meta name="docsearch:package_type" content="" />
+    <meta name="docsearch:release" content="1.0" />
+    <meta name="docsearch:version" content="" />
+    
+      <meta name="theme-color" content="#0DCAF0" />
+    
+    
+      <title>The Robot &mdash; Hexapod Documentation 1.0 documentation</title>
+    
+    <link rel="canonical" href="robot/the_robot" />
+          <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" /><!-- add (1) -->
+          <link rel="stylesheet" type="text/css" href="../_static/fonts\nunito\stylesheet.css?v=abf98f06" /><!-- add (1) -->
+          <link rel="stylesheet" type="text/css" href="../_static/fonts\ubuntu-sans-mono\stylesheet.css?v=8616a587" /><!-- add (1) -->
+          <link rel="stylesheet" type="text/css" href="../_static/pygments-dark.css?v=2de69186" /><!-- add (1) -->
+          <link rel="stylesheet" type="text/css" href="../_static/pygments-light.css?v=970f37b1" /><!-- add (1) -->
+          <link rel="stylesheet" type="text/css" href="../_static/bootstrap-icons.min.css?v=44730005" /><!-- add (1) -->
+          <link rel="stylesheet" type="text/css" href="../_static/sphinx-nefertiti-default.min.css?v=88df5cc9" /><!-- add (1) -->
+        <link rel="index" title="Index" href="../genindex.html" />
+        <link rel="search" title="Search" href="../search.html" />
+        <link rel="top" title="Hexapod Documentation 1.0 documentation" href="#" />
+        <link rel="up" title="The Robot" href="index.html" />
+        <link rel="next" title="Simulation" href="../simulation/index.html" />
+        <link rel="prev" title="The Controller" href="the_controller.html" />
+    <style>
+      :root {
+        --nftt-body-font-family: "Nunito", var(--nftt-font-sans-serif) !important;
+        --nftt-font-monospace: "Ubuntu Sans Mono", var(--nftt-font-family-monospace) !important;
+        --nftt-project-name-font: var(--nftt-body-font-family);
+        --nftt-documentation-font: var(--nftt-body-font-family);
+        --nftt-doc-headers-font: "Georgia", var(--nftt-documentation-font);}
+    </style>
+  </head>
+  <body>
+    <div id="back-to-top-container" class="position-fixed start-50 translate-middle-x">
+      <button id="back-to-top" type="button" class="d-none btn btn-neutral btn-sm shadow px-4" data-bs-toggle="button">Back to top</button>
+    </div>
+    <header id="snftt-nav-bar" class="navbar navbar-expand-xl navbar-dark nftt-navbar flex-column fixed-top">
+      <div class="skip-links container-fluid visually-hidden-focusable overflow-hidden justify-content-start flex-grow-1">
+        <div class="border-bottom mb-2 pb-2 w-100">
+          <a class="d-none d-md-inline-flex p-2 m-1" href="#sidebar-filter">Skip to index filter</a>
+          <a class="d-inline-flex p-2 m-1" href="#content">Skip to main content</a>
+        </div>
+      </div>
+      <nav class="container-xxl nftt-gutter flex-nowrap" aria-label="Main navigation">
+        <div class="nftt-navbar-toggler">
+          <button class="navbar-toggler p-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar" aria-controls="sidebar" aria-label="Toggle documentation navigation">
+            <i class="bi bi-list"></i>
+          </button>
+        </div>
+          <a href="../index.html"
+             class="navbar-brand"
+          ><span class="brand-text">Hexapod Documentation</span><span class="brand-short-text">Hexapod Documentation</span></a>
+        
+        
+        <div class="d-flex d-xl-none">
+          <button class="navbar-toggler p-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#nfttSearch" aria-controls="nfttSearch" aria-label="Search">
+            <i class="bi bi-search"></i>
+          </button>
+          <button class="navbar-toggler p-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#nfttNavbar" aria-controls="nfttNavbar" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+        </div>
+        
+<div class="offcanvas-xl offcanvas-end flex-grow-1" tabindex="-1" id="nfttSearch" aria-labelledby="nfttSearchOffcanvasLabel" data-bs-scroll="true">
+  <div class="offcanvas-header px-4 pb-0">
+    <h5 class="offcanvas-title fw-bold" id="nfttSearchOffcanvasLabel">Search the documentation</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close" data-bs-target="#nfttSearch"></button>
+  </div>
+  <div class="offcanvas-body p-4 pt-0 p-xl-0 ps-xl-4">
+    <hr class="d-xl-none text-white-50">
+    <ul class="navbar-nav flex-row align-items-center flex-wrap ms-md-auto">
+      <li class="nav-item col-12 col-xl-auto">
+        <form id="nftt-search-form" action="../search.html" method="get">
+          <div class="input-group">
+            <input type="text" name="q" class="form-control search-input" placeholder="Search" aria-label="Search" aria-describedby="button-search">
+            <input type="hidden" name="check_keywords" value="yes" />
+            <input type="hidden" name="area" value="default" />
+            <button class="btn btn-primary" type="submit" id="button-search" aria-label="Search"><i class="bi bi-search"></i></button>
+          </div>
+        </form>
+      </li>
+    </ul>
+  </div>
+</div>
+
+        <div class="offcanvas-xl offcanvas-end" tabindex="-1" id="nfttNavbar" aria-labelledby="nfttNavbarOffcanvasLabel" data-bs-scroll="true">
+          <div class="offcanvas-header px-4 pb-0">
+            <div class="offcanvas-title navbar-brand" id="nfttNavbarOffcanvasLabel"><span class="brand-short-text">Hexapod Documentation</span></div>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close" data-bs-target="#nfttNavbar"></button>
+          </div>
+          <div class="offcanvas-body p-4 pt-0 p-xl-0 px-xl-3">
+            <hr class="d-xl-none text-white-50">
+            <ul class="navbar-nav flex-row align-items-center flex-wrap ms-lg-auto">
+              
+              
+              
+              
+              
+              <!-- lightdark-dropdown.html -->
+<li class="nav-item dropdown">
+  <a class="nav-link d-flex py-2 px-0 px-xl-2 dropdown-toggle align-items-center" id="snftt-luz" href="#" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false" aria-label="Change appearance">
+    <i class="bi bi-circle-half" data-snftt-luz-icon-active></i>
+    <span id="snftt-luz-text" class="d-xl-none ms-2">Change appearance</span>
+  </a>
+  <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="snftt-luz-text">
+    <li>
+      <h6 class="dropdown-header">Change appearance</h6>
+    </li>
+    <li>
+      <a class="dropdown-item d-flex align-items-center" data-snftt-luz="light" href="#" aria-pressed="false">
+        <span>
+          <i class="bi bi-sun" data-snftt-luz-icon="light"></i>
+        </span>
+        <span class="ms-3">Light</span>
+        <i class="bi bi-check ms-auto"></i>
+      </a>
+    </li>
+    <li>
+      <a class="dropdown-item d-flex align-items-center" data-snftt-luz="dark" href="#" aria-pressed="false">
+        <span>
+          <i class="bi bi-moon-stars" data-snftt-luz-icon="dark"></i>
+        </span>
+        <span class="ms-3">Dark</span>
+        <i class="bi bi-check ms-auto"></i>
+      </a>
+    </li>
+    <li>
+      <a class="dropdown-item current d-flex align-items-center" data-snftt-luz="default" href="#" aria-pressed="false">
+        <span>
+          <i class="bi bi-circle-half" data-snftt-luz-icon="default"></i>
+        </span>
+        <span class="ms-3">Automatic</span>
+        <i class="bi bi-check ms-auto"></i>
+      </a>
+    </li>
+  </ul>
+</li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      
+    </header>
+
+    <div class="container-fluid">
+      <div class="nftt-gutter nftt-page">
+        <aside class="nftt-sidebar ">
+          <div class="nftt-sidebar-content">
+            
+            <div class="title d-none d-xl-none">
+              <i class="bi bi-book"></i>&nbsp;&nbsp;<span>Index</span>
+            </div>
+            <div id="sidebar" tabindex="-1" class="offcanvas-xl offcanvas-start" aria-labelledby="nfttSidebarOffcanvasLabel">
+                <!-- sidebartemplate: "globaltoc.html" --><div class="offcanvas-header border-bottom">
+  <h5 class="offcanvas-title fw-bold" id="nfttSidebarOffcanvasLabel">
+    Index
+  </h5>
+  <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close" data-bs-target="#sidebar"></button>
+</div>
+
+<div class="offcanvas-body">
+  <nav class="toc" aria-label="Main menu">
+    <div class="mb-3 p-1 pb-4 border-bottom">
+      <input id="sidebar-filter" type="text" name="filter" class="form-control form-control-sm" placeholder="index filter" aria-label="index filter">
+    </div>
+    <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../introduction/index.html">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../introduction/what_is_this_project.html">What Is This Project?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../introduction/why_this_project.html">Why This Project?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../introduction/how_did_i_do_it.html">How Did I Do It?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../introduction/timelines.html">Timelines</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">The Robot</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="the_controller.html">The Controller</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">The Robot</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../simulation/index.html">Simulation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../simulation/using_coppeliasim.html">Using CoppeliaSim</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../simulation/serial_connection.html">Connecting a Serial Port to CoppeliaSim via Arduino</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../simulation/lessons_learned.html">What CoppeliaSim Taught Me</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../cad_design_process/index.html">CAD Design Process</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cad_design_process/master_sketches.html">Learning How to Make Master Sketches</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cad_design_process/design_versions.html">3 Versions of Design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cad_design_process/final_model.html">Coming to the Final Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cad_design_process/design_explanation.html">Explanation on the Design</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../cad_design_intro/index.html">CAD Design Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cad_design_intro/body.html">Body</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cad_design_intro/legs.html">Legs — Coxa, Femur, Tibia</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cad_design_intro/mounts.html">Mounts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cad_design_intro/controller_cad.html">Controller</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../electronics/index.html">Electronics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../electronics/servos.html">Servos</a></li>
+</ul>
+</li>
+</ul>
+
+  </nav>
+  <template data-toggle-item-template>
+    <button class="btn btn-sm btn-link toctree-expand" type="button">
+      <i class="bi bi-caret-right"></i>
+      <span class="visually-hidden">Toggle menu contents</span>
+    </button>
+  </template>
+</div>
+            </div>
+            
+          </div>
+        </aside>
+        <article id="content" class="nftt-content" role="main">
+          <div><div class="d-flex flex-row justify-content-between">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="../index.html">Start</a></li>
+        <li class="breadcrumb-item"><a href="index.html">The Robot</a></li>
+      <li class="breadcrumb-item active" aria-current="page">The Robot</li>
+    </ol>
+  </nav>
+  
+    <div class="fs085">
+        <a href="../_sources/robot/the_robot.rst.txt"  rel="nofollow" aria-label="Show source of this document"><i class="bi bi-file-earmark-code"></i></a>
+    </div>
+  
+</div>
+            
+    <section id="the-robot">
+<span id="id1"></span><h1>The Robot<a class="headerlink" href="#the-robot" title="Link to this heading">¶</a></h1>
+<div style="display: flex; align-items: flex-start; gap: 2rem; margin-bottom: 2rem;">
+
+  <!-- LEFT: text -->
+  <div style="flex: 1;"><p>The hexapod robot is the central artefact of this project. It consists of a central body
+frame, six identical leg assemblies, an electronics bay, and an antenna mast — all fabricated
+from 3-D printed PLA components bolted together with M3 hardware.</p>
+<p>Each leg has three degrees of freedom, actuated by hobby-grade servo motors:</p>
+<ul class="simple">
+<li><p><strong>Coxa joint</strong> — rotates the leg horizontally about a vertical axis, controlling the
+sweep angle.</p></li>
+<li><p><strong>Femur joint</strong> — lifts the leg up and down relative to the body plane.</p></li>
+<li><p><strong>Tibia joint</strong> — extends or retracts the lower leg segment, controlling foot reach.</p></li>
+</ul>
+<p>The body houses the main microcontroller, power-distribution board, and receiver module in
+a compact electronics bay accessible via a removable lid panel. The centre of mass was
+deliberately kept low by positioning the heaviest components (battery pack, power board)
+at the base of the body cavity.</p>
+<p>Mechanically, the robot weighs approximately <strong>XX g</strong> (replace), spans <strong>XX mm</strong> tip-to-tip
+across opposing legs, and stands <strong>XX mm</strong> tall in its nominal stance.</p>
+</div>
+
+<!-- RIGHT: Robot image placeholder -->
+<div style="flex: 0 0 auto;"><figure class="align-right" id="id2">
+<a class="reference internal image-reference" href="_static/hexapod_robot.jpg"><img alt="Assembled hexapod robot" src="_static/hexapod_robot.jpg" style="width: 380px;" />
+</a>
+<figcaption>
+<p><span class="caption-text"><em>Assembled hexapod — replace with your own photograph.</em></span><a class="headerlink" href="#id2" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
+  </div>
+</div><section id="bill-of-materials-robot">
+<h2>Bill of Materials — Robot<a class="headerlink" href="#bill-of-materials-robot" title="Link to this heading">¶</a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Replace the placeholder cells below with your actual component names, part numbers,
+quantities, suppliers, and unit costs. Add or remove rows as needed.</p>
+</div>
+<p><strong>Mechanical Components</strong></p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 30.0%" />
+<col style="width: 20.0%" />
+<col style="width: 15.0%" />
+<col style="width: 20.0%" />
+<col style="width: 15.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Component</p></th>
+<th class="head"><p>Part / Model</p></th>
+<th class="head"><p>Qty</p></th>
+<th class="head"><p>Supplier</p></th>
+<th class="head"><p>Unit Cost</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>A — Body frame (3-D printed)</p></td>
+<td><p><em>TBD</em></p></td>
+<td><p><em>TBD</em></p></td>
+<td><p><em>TBD</em></p></td>
+<td><p><em>TBD</em></p></td>
+</tr>
+<tr class="row-odd"><td><p>B — Coxa link (per leg)</p></td>
+<td><p><em>TBD</em></p></td>
+<td><p><em>TBD</em></p></td>
+<td><p><em>TBD</em></p></td>
+<td><p><em>TBD</em></p></td>
+</tr>
+<tr class="row-even"><td><p>C — Femur link (per leg)</p></td>
+<td><p><em>TBD</em></p></td>
+<td><p><em>TBD</em></p></td>
+<td><p><em>TBD</em></p></td>
+<td><p><em>TBD</em></p></td>
+</tr>
+<tr class="row-odd"><td><p>D — Tibia link (per leg)</p></td>
+<td><p><em>TBD</em></p></td>
+<td><p><em>TBD</em></p></td>
+<td><p><em>TBD</em></p></td>
+<td><p><em>TBD</em></p></td>
+</tr>
+<tr class="row-even"><td><p>E — Fasteners / hardware</p></td>
+<td><p><em>TBD</em></p></td>
+<td><p><em>TBD</em></p></td>
+<td><p><em>TBD</em></p></td>
+<td><p><em>TBD</em></p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Electrical Components</strong></p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 30.0%" />
+<col style="width: 20.0%" />
+<col style="width: 15.0%" />
+<col style="width: 20.0%" />
+<col style="width: 15.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Component</p></th>
+<th class="head"><p>Part / Model</p></th>
+<th class="head"><p>Qty</p></th>
+<th class="head"><p>Supplier</p></th>
+<th class="head"><p>Unit Cost</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>A — Servo motors</p></td>
+<td><p><em>TBD</em></p></td>
+<td><p>18</p></td>
+<td><p><em>TBD</em></p></td>
+<td><p><em>TBD</em></p></td>
+</tr>
+<tr class="row-odd"><td><p>B — Main MCU</p></td>
+<td><p><em>TBD</em></p></td>
+<td><p><em>TBD</em></p></td>
+<td><p><em>TBD</em></p></td>
+<td><p><em>TBD</em></p></td>
+</tr>
+<tr class="row-even"><td><p>C — Power distribution board</p></td>
+<td><p><em>TBD</em></p></td>
+<td><p><em>TBD</em></p></td>
+<td><p><em>TBD</em></p></td>
+<td><p><em>TBD</em></p></td>
+</tr>
+<tr class="row-odd"><td><p>D — Antenna / receiver module</p></td>
+<td><p><em>TBD</em></p></td>
+<td><p><em>TBD</em></p></td>
+<td><p><em>TBD</em></p></td>
+<td><p><em>TBD</em></p></td>
+</tr>
+<tr class="row-even"><td><p>E — LiPo battery pack</p></td>
+<td><p><em>TBD</em></p></td>
+<td><p><em>TBD</em></p></td>
+<td><p><em>TBD</em></p></td>
+<td><p><em>TBD</em></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+
+</div>
+        </article>
+        <aside class="nftt-toc">
+          
+          <div class="my-sm-1 my-lg-0 ps-xl-3 text-muted">
+            <button class="btn btn-link p-lg-0 mb-2 mb-lg-0 text-decoration-none nftt-toc-toggle d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#tocContents" aria-expanded="false" aria-controls="tocContents"
+            >On this page <i class="ms-2 bi bi-chevron-expand"></i></button>
+            <div class="title d-none d-lg-block">
+              <i class="bi bi-file-earmark-text"></i>&nbsp;&nbsp;<span class="small">On this page</span>
+            </div>
+            <div class="collapse nftt-toc-collapse" id="tocContents">
+              <nav id="TableOfContents">
+                <ul>
+<li><a class="reference internal" href="#">The Robot</a><ul>
+<li><a class="reference internal" href="#bill-of-materials-robot">Bill of Materials — Robot</a></li>
+</ul>
+</li>
+</ul>
+
+              </nav>
+            </div>
+          </div>
+          
+        </aside>
+      </div>
+    </div>
+
+    <footer class="nftt-footer">
+      <nav id="paginator" class="py-4" aria-label="Documentation navigation">
+    <div class="container">
+      <ul class="pagination justify-content-between mb-0"><li class="d-flex page-item">
+            <a href="the_controller.html" class="d-flex pe-5 px-lg-5 align-items-end" rel="prev" aria-label="Previous page: The Controller">
+              <span class="prev-page"><i class="bi bi-caret-left"></i></span>
+              <div class="d-none d-sm-flex flex-column">
+                <span class="text-small text-start text-muted">Previous</span>
+                <span class="underline">The Controller</span>
+              </div>
+            </a>
+          </li>
+        <li class="d-flex page-item ms-auto">
+            <a href="../simulation/index.html" class="d-flex ps-5 px-lg-5 align-items-end" rel="next" aria-label="Next page: Simulation">
+              <div class="d-flex flex-column">
+                <span class="text-small text-end text-start text-muted">Next</span>
+                <span class="underline">Simulation</span>
+              </div>
+              <span class="next-page"><i class="bi bi-caret-right"></i></span>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </nav>
+
+      <div class="py-5 px-4 px-md-3">
+  <div class="container">
+    
+
+    <div class="row">
+      <div class="col-lg-12 text-center">
+        <a class="brand-text d-inline-flex align-items-center mb-2 text-decoration-none" href="/" aria-label="Hexapod Documentation">
+          <span class="fs-6 fw-bold">Hexapod Documentation</span>
+        </a>
+        
+          <ul class="list-unstyled small text-muted">
+            <li>2026, Khoo Yee Zhen</li>
+          </ul>
+        
+        <div class="built-with pt-2">
+          Built with <a href="http://sphinx-doc.org">Sphinx 9.1.0</a> and <a href="https://github.com/danirus/sphinx-nefertiti">Nefertiti 0.9.8</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    </footer>
+
+    <div class="modal modal-xl fade" id="nftt-modal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-fullscreen-xxl-down modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="nftt-modal-title"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="nftt-modal-body">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+    <script src="../_static/documentation_options.js?v=f2a433a1"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/docs-versions.js?v=08b0cbfb"></script>
+    <script src="../_static/sphinx-nefertiti.min.js?v=f7f548f2"></script>
+    <script src="../_static/bootstrap.bundle.min.js?v=e96d90d1"></script>
+  </body>
+</html>

@@ -1,0 +1,77 @@
+.. _why_this_project:
+
+==================
+Why This Project?
+==================
+
+Motivation
+----------
+
+Legged locomotion has long captured the interest of roboticists and biologists alike. Unlike
+wheeled or tracked systems, legged robots can traverse unstructured, irregular terrain — steps,
+rubble, loose soil — that would immobilise conventional vehicles. The hexapod configuration is
+particularly attractive because six legs provide a high degree of fault tolerance: the robot
+remains statically stable even if one leg is raised or damaged, since the remaining five can
+always form a stable tripod.
+
+This project was motivated by a desire to explore the intersection of mechanical design,
+embedded systems, and computational geometry in a single, tangible platform. Building a hexapod
+demands proficiency in all three areas simultaneously, making it an ideal vehicle for deep,
+integrative learning.
+
+Literature Review
+-----------------
+
+.. note::
+   **Placeholder — expand this section with your full literature review.**
+   The paragraph below is a representative stub. Replace or extend it with your own synthesis
+   of the sources listed in the reference list at the end of this page.
+
+Research into hexapod locomotion spans several decades and draws from biomechanics, control
+theory, and mechanical engineering. Early work by :cite:`brooks1989` demonstrated that
+reactive, decentralised control architectures could produce surprisingly robust walking
+behaviour without any explicit world model. Subsequent studies showed that insects such as
+*Carausius morosus* (the stick insect) regulate inter-leg coordination through local sensory
+feedback loops rather than a central pattern generator alone :cite:`cruse1990`. These
+biological insights directly informed the design of the tripod gait used in this project.
+On the computational side, :cite:`siegwart2011` provides a thorough treatment of mobile-robot
+kinematics, including the Denavit–Hartenberg convention adopted here for the leg IK solver.
+More recently, :cite:`rai2019` demonstrated that simulation-to-real transfer of learned
+locomotion policies is feasible for legged robots when the simulation is sufficiently
+high-fidelity, motivating the CoppeliaSim-first workflow described later in this documentation.
+Further refinements to power-efficient gait selection are discussed in :cite:`garcia2002`,
+while :cite:`saranli2001` examines the dynamics of alternating-tripod gaits in the context of
+the RHex platform — a hexapod robot that achieved high-speed locomotion on rough terrain.
+
+References
+----------
+
+.. note::
+   **Placeholder reference list** — replace the entries below with your actual BibTeX-style or
+   RST citations. If you are using the ``sphinxcontrib-bibtex`` extension, swap these manual
+   entries for a ``.. bibliography::`` directive pointing to your ``.bib`` file.
+
+.. [brooks1989]
+   Brooks, R. A. (1989). A robot that walks: Emergent behaviors from a carefully evolved
+   network. *Neural Computation*, 1(2), 253–262.
+
+.. [cruse1990]
+   Cruse, H. (1990). What mechanisms coordinate leg movement in walking arthropods?
+   *Trends in Neurosciences*, 13(1), 15–21.
+
+.. [siegwart2011]
+   Siegwart, R., Nourbakhsh, I. R., & Scaramuzza, D. (2011).
+   *Introduction to Autonomous Mobile Robots* (2nd ed.). MIT Press.
+
+.. [rai2019]
+   Rai, A., Antonova, R., Song, S., Martin, W., Geyer, H., & Atkeson, C. (2019).
+   Combining physical simulators and object-based networks for control.
+   *IEEE Robotics and Automation Letters*, 4(3), 3007–3014.
+
+.. [garcia2002]
+   García, E., Jiménez, M. A., De Santos, P. G., & Armada, M. (2002).
+   The evolution of robotics research. *IEEE Robotics & Automation Magazine*, 14(1), 90–103.
+
+.. [saranli2001]
+   Saranli, U., Buehler, M., & Koditschek, D. E. (2001). RHex: A simple and highly mobile
+   hexapod robot. *The International Journal of Robotics Research*, 20(7), 616–631.

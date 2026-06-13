@@ -115,7 +115,7 @@ void loop() {
   }
   
   angle = floor((double)(rx_data/10));
-  magnitude = rx_data - angle*10;
+  magnitude = abs(rx_data - angle*10);
   int direction;
   if (abs(angle) >= 160) {
     direction = -1;
@@ -125,11 +125,11 @@ void loop() {
   }
 
   int turn = 0;
-  if (angle >= 45 and angle <160) {
-    turn = 1;
-  }
-  else if (angle <= -45 and angle > 160) {
+  if (angle >= 45 and angle < 160) {
     turn = -1;
+  }
+  else if (angle <= -45 and angle > -160) {
+    turn = 1;
   }
   else {
     turn = 0;

@@ -1,0 +1,51 @@
+.. _mounts_cad:
+
+=======
+Mounts
+=======
+
+.. Note on the image:
+   - Replace ``_static/cad_mounts.png`` with your servo-mount or bracket CAD screenshot.
+
+.. figure:: /_static/cad_mounts.png
+   :width: 600px
+   :align: center
+   :alt: Servo and accessory mount CAD models
+
+   *Mount family — replace with your own render.*
+
+The hexapod uses a family of mount components to interface servos, the camera module, and the
+antenna mast to the structural frame. All mounts share a common two-bolt M2 attachment footprint
+so they are interchangeable on the body's mounting rail.
+
+Servo Mounts
+-------------
+
+Each servo is retained by a dedicated clamp-style mount that surrounds three sides of the servo
+body. The fourth side is open to allow the servo cable to exit without strain. Two M2 bolts
+clamp the two halves of the mount together; a locating ledge on the inner face seats against
+the servo's flange to resist axial pull-out.
+
+Mounts are provided in three orientations:
+
+- **Horizontal mount** — for the coxa servos (rotation axis vertical).
+- **Vertical mount (forward-facing)** — for the femur servos.
+- **Vertical mount (rearward-facing)** — for the tibia servos.
+
+The three orientations are derived from a single master sketch by applying directional
+suppression patterns, keeping the part family compact.
+
+Camera Mount
+-------------
+
+The front camera module is retained by a ball-and-socket tilt mechanism that allows ±20°
+vertical adjustment. The ball is printed in PETG for its self-lubricating properties; the
+socket is PLA. A single M3 friction bolt locks the desired tilt angle in place.
+
+Antenna Mast Mount
+-------------------
+
+The antenna mast is a press-fit cylinder that inserts into a pocket on the rear-left corner
+of the body. A small M2 grub screw on the side of the pocket prevents the mast from rotating
+or vibrating loose during operation. The mast height was selected to keep the antenna at least
+50 mm above the body's highest point to reduce near-field interference with the electronics.

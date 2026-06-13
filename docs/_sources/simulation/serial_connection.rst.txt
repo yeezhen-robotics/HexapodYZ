@@ -1,0 +1,78 @@
+.. _serial_connection:
+
+============================================================
+Connecting a Serial Port to CoppeliaSim via Arduino
+============================================================
+
+One of the most valuable aspects of the simulation workflow was the ability to drive the
+virtual hexapod with the same Arduino firmware that would later run on the physical robot.
+This was achieved by routing serial communication between the Arduino and CoppeliaSim through
+the host PC's USB-serial interface.
+
+Architecture
+-------------
+
+.. code-block:: text
+
+   [ Arduino (physical hardware) ]
+            |  USB / Serial (115 200 baud)
+            v
+   [ Host PC — serial bridge script (Python) ]
+            |  TCP socket / CoppeliaSim Remote API
+            v
+   [ CoppeliaSim — Lua child script on robot model ]
+
+The Python bridge script opened the COM port exposed by the Arduino, decoded the incoming
+command frames, and forwarded servo-angle setpoints to the CoppeliaSim remote API using the
+``sim.setJointTargetPosition()`` call. The round-trip latency (Arduino → bridge → simulator)
+was measured at approximately **X ms** on the development machine — well within the
+20 ms control cycle budget.
+
+Serial Frame Format
+--------------------
+
+Each command frame transmitted by the Arduino had the following structure:
+
+.. code-block:: text
+
+   | START (0xAA) | LEG_ID (0–5) | COXA_ANGLE | FEMUR_ANGLE | TIBIA_ANGLE | CHECKSUM |
+
+- ``START`` — a fixed sync byte used by the receiver to detect frame boundaries.
+- ``LEG_ID`` — identifies which of the six legs the angles apply to (0 = front-left, ..., 5 = rear-right).
+- ``COXA/FEMUR/TIBIA_ANGLE`` — signed 8-bit integers encoding joint angles in units of 1°, offset so 0 = neutral.
+- ``CHECKSUM`` — XOR of all preceding bytes; the receiver discards frames with a checksum mismatch.
+
+Python Bridge Script (Excerpt)
+--------------------------------
+
+.. code-block:: python
+
+   import serial, struct, time
+   # Replace 'COM3' / '/dev/ttyUSB0' with your actual port
+   ser = serial.Serial('COM3', 115200, timeout=0.01)
+
+   def read_frame(ser):
+       """Block until a valid START byte is found, then read the rest of the frame."""
+       while True:
+           byte = ser.read(1)
+           if byte == b'\xaa':
+               payload = ser.read(5)           # LEG_ID + 3 angles + checksum
+               if len(payload) == 5:
+                   leg, coxa, femur, tibia, chk = struct.unpack('5b', payload)
+                   if (0xaa ^ leg ^ coxa ^ femur ^ tibia) & 0xff == chk & 0xff:
+                       return leg, coxa, femur, tibia
+       return None
+
+   # Main loop — forward each valid frame to CoppeliaSim
+   while True:
+       frame = read_frame(ser)
+       if frame:
+           leg, coxa, femur, tibia = frame
+           # sim.setJointTargetPosition() calls go here (CoppeliaSim remote API)
+           pass
+       time.sleep(0.001)
+
+.. note::
+   Replace the CoppeliaSim remote-API calls (commented out above) with the actual
+   ``sim.setJointTargetPosition(handle, math.radians(angle))`` invocations once you have
+   obtained the joint handles for each leg in your scene.

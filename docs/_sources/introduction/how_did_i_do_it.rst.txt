@@ -1,0 +1,55 @@
+.. _how_did_i_do_it:
+
+==================
+How Did I Do It?
+==================
+
+.. Note on the image below:
+   - Replace ``_static/project_overview.jpg`` with the path to your actual image.
+   - ``:width:`` controls the rendered width; use pixels (``700px``) or a percentage (``80%``).
+   - ``:scale:`` (1–100) scales relative to the original file dimensions.
+   - To display only a cropped region, use a ``.. raw:: html`` block:
+     wrap an ``<img>`` tag in a ``<div>`` with ``overflow: hidden`` and set
+     ``object-fit: cover`` plus ``object-position`` on the ``<img>`` itself.
+     Example::
+       .. raw:: html
+          <div style="width:700px; height:350px; overflow:hidden;">
+            <img src="_static/project_overview.jpg"
+                 style="width:100%; object-fit:cover; object-position: center top;">
+          </div>
+
+.. figure:: /_static/project_overview.jpg
+   :width: 700px
+   :align: center
+   :alt: High-level overview of the project development pipeline
+
+   *High-level project overview — replace with your own image.*
+
+Project Development Overview
+-----------------------------
+
+The hexapod was developed in four broad phases, each building on the last:
+
+**Phase 1 — Concept & Simulation.**
+Before any hardware was purchased, the locomotion strategy was prototyped in CoppeliaSim.
+A simplified three-link leg model was constructed in the simulator and the tripod gait was
+validated against static-stability criteria. Serial communication between CoppeliaSim and an
+Arduino platform allowed real controller code to drive the virtual robot, exposing timing and
+protocol issues early and cheaply.
+
+**Phase 2 — Mechanical Design.**
+With a validated gait in hand, the structural design was tackled across three CAD iterations.
+Master sketches in the parametric CAD environment ensured that changes to core dimensions
+(leg length, body width, servo-mount geometry) propagated automatically through the entire
+assembly. The final design was exported as STL files and 3-D printed in PLA.
+
+**Phase 3 — Electronics Integration.**
+The servo bus, power distribution board, microcontroller, and antenna module were assembled
+and bench-tested. A custom power-distribution PCB was designed to supply regulated 5 V to the
+servo rail while keeping the logic supply isolated, preventing servo noise from corrupting the
+MCU.
+
+**Phase 4 — Software & Tuning.**
+The inverse kinematics solver, tripod gait scheduler, and signal-compaction layer were
+implemented on the target MCU. The robot was progressively tuned on flat ground, then
+tested on inclines and rough surfaces until consistent, stable locomotion was achieved.

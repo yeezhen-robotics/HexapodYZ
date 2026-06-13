@@ -1,0 +1,47 @@
+.. _lessons_learned:
+
+================================
+What CoppeliaSim Taught Me
+================================
+
+Simulating the hexapod before building it compressed months of potential trial-and-error into
+a few weeks of rapid iteration. The lessons learned fell into three broad categories.
+
+Mechanical Insights
+--------------------
+
+The simulation made it immediately obvious that the initial leg geometry placed the tibia
+servo under excessive torque during the stance phase. By visualising the joint-torque readouts
+in CoppeliaSim, the femur link length was increased by 15 mm and the nominal stance width
+was widened, reducing peak torque to within the rated stall torque of the chosen servo with
+an acceptable safety margin.
+
+The simulator also revealed a tendency for the robot to pitch forward during acceleration —
+a consequence of the centre of mass being too far forward. This was corrected in the CAD
+design by repositioning the battery pack rearward, a change that would have been costly to
+make post-fabrication.
+
+Control & Algorithm Insights
+------------------------------
+
+Running the tripod gait in simulation exposed a subtle timing issue: when two tripods handed
+over within the same control tick, a brief instability appeared in the simulated body pose.
+Adding a short dwell period (two control ticks at neutral stance) between tripod transitions
+eliminated the artefact and translated directly to smoother hardware behaviour.
+
+The simulation was also invaluable for tuning the IK solver's singularity-avoidance margins.
+Edge cases that would have required physical disassembly to reproduce could be induced
+repeatably in seconds by manually setting joint angles to boundary values.
+
+Workflow Insights
+------------------
+
+Perhaps the most important lesson was the value of the simulation-first workflow itself.
+Using the real firmware to drive the virtual robot meant that the software stack was already
+well-tested and debugged by the time hardware was available. Integration testing on the
+physical robot took only a fraction of the time it would have otherwise required, because the
+remaining unknowns were limited to hardware-specific issues (servo backlash, cable routing,
+connector reliability) rather than algorithmic ones.
+
+The experience strongly reinforced the value of high-fidelity simulation as a development
+tool, not merely a demonstration vehicle.

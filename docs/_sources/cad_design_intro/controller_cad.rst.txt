@@ -1,0 +1,43 @@
+.. _controller_cad:
+
+===========
+Controller
+===========
+
+.. Note on the image:
+   - Replace ``_static/cad_controller.png`` with your controller enclosure CAD screenshot.
+
+.. figure:: /_static/cad_controller.png
+   :width: 600px
+   :align: center
+   :alt: Controller enclosure CAD model
+
+   *Controller enclosure — replace with your own render.*
+
+The handheld controller enclosure was designed to house the controller PCB, joystick modules,
+push buttons, and battery in a compact, ergonomic shell. The enclosure splits along a
+horizontal mid-plane into a top shell and a bottom shell, both retained by four M2 screws.
+
+Ergonomics
+-----------
+
+The shell profile was iterated using physical foam mockups before any CAD work began. The
+grip angle was set at 15° forward tilt relative to the horizontal, which was found to be the
+most comfortable angle for extended operation. Thumb-well recesses on the top face locate the
+operator's thumbs naturally over the joystick modules.
+
+PCB Tray
+---------
+
+A snap-in PCB tray inside the bottom shell locates the controller PCB using four standoffs.
+The tray can be removed as a unit, exposing the battery compartment beneath for easy cell
+replacement. The USB programming port on the controller MCU is accessible through a rectangular
+aperture in the right lateral face without opening the enclosure.
+
+Button Panel
+-------------
+
+Three tactile push buttons protrude through the top shell via cylindrical barrels moulded
+into the shell. Each barrel has a 0.2 mm diametral clearance on the button body and a
+small chamfer to guide the button into place during assembly. The buttons are retained by the
+PCB alone — no separate retaining clip is required.

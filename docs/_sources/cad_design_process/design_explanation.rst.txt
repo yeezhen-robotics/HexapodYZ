@@ -1,0 +1,49 @@
+.. _design_explanation:
+
+==========================
+Explanation on the Design
+==========================
+
+This section provides a concise rationale for the principal design choices in the final model.
+Detailed part-level descriptions are given in the :ref:`cad_design_intro` chapter.
+
+Body Frame Geometry
+--------------------
+
+The body was designed as a closed hexagonal shell rather than an open rectangular tray. The
+hexagonal perimeter more closely matches the natural attachment geometry of six equidistant
+legs and provides a shorter torque path from each leg mount to the central spine, reducing
+torsional flex during asymmetric loading (e.g. when only one tripod is in contact with the
+ground).
+
+Leg Proportions
+----------------
+
+The coxa : femur : tibia length ratio was set to **1 : 2 : 2.5** based on a survey of
+biological hexapods and prior robotic platforms. This ratio provides a large reachable
+workspace relative to the body footprint while keeping the femur and tibia servo torque
+requirements within the rated output of the chosen motors.
+
+Servo Mount Interface
+----------------------
+
+All servo mounts use a two-bolt M2 clamping interface with a locating ledge. The ledge
+absorbs the majority of the shear load from servo reaction torque, leaving the bolts to
+resist only pull-out forces. This substantially extends the fatigue life of the printed
+mount compared to a bolt-only interface.
+
+Electronics Bay
+----------------
+
+The electronics bay occupies the central 60 % of the body volume. It is accessible via a
+snap-fit lid on the dorsal surface. The MCU, receiver module, and power-distribution board
+are mounted on a sub-tray that can be removed as a single unit — useful for bench testing
+or swapping between robot bodies.
+
+Cable Management
+-----------------
+
+Servo cables are routed through dedicated channels moulded into the coxa and femur links,
+keeping them away from the joint rotation axes. At the body entry point, a grommet-lined
+aperture prevents chafing. This routing strategy was validated in simulation by animating
+the full range of joint motion and checking for cable-interference conflicts.

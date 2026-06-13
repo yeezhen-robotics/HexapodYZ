@@ -1,0 +1,56 @@
+.. _timelines:
+
+==========
+Timelines
+==========
+
+.. Note on the image below:
+   - Replace ``_static/project_timeline.png`` with your Gantt chart, roadmap screenshot,
+     or any timeline graphic.
+   - ``:width:`` sets the rendered width; ``700px`` fills most page widths in HTML output.
+   - ``:scale:`` (1–100) scales relative to the original pixel dimensions of the file.
+   - To show only a portion of the image (e.g. crop the bottom legend), use the raw-HTML
+     snippet described in the ``how_did_i_do_it`` page.
+
+.. figure:: /_static/project_timeline.png
+   :width: 700px
+   :align: center
+   :alt: Hexapod project timeline / Gantt chart
+
+   *Project timeline — replace with your own Gantt chart or milestone graphic.*
+
+Timeline Description
+--------------------
+
+The project spanned approximately **XX weeks** (replace with actual duration) and was divided
+into the milestone phases summarised below. Each phase had a defined deliverable that served
+as the entry criterion for the next phase.
+
+.. list-table:: Project Milestones
+   :widths: 15 25 60
+   :header-rows: 1
+
+   * - Week
+     - Milestone
+     - Description
+   * - 1–2
+     - Project scoping
+     - Literature review, requirements definition, component shortlisting.
+   * - 3–4
+     - Simulation
+     - CoppeliaSim model built; tripod gait validated; serial link to Arduino confirmed.
+   * - 5–8
+     - CAD design
+     - Three design iterations completed; final STL files exported and printed.
+   * - 9–10
+     - Electronics assembly
+     - PCB populated; servo bench-test passed; MCU firmware skeleton uploaded.
+   * - 11–13
+     - Software integration
+     - IK solver, gait scheduler, and signal compaction layer integrated and tuned.
+   * - 14
+     - Testing & documentation
+     - Field tests on varied terrain; this documentation finalised.
+
+.. note::
+   Update the week numbers and descriptions to match your actual project schedule.

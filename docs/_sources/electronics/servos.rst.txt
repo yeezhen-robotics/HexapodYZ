@@ -1,0 +1,60 @@
+.. _servos:
+
+=======
+Servos
+=======
+
+The hexapod uses eighteen servo motors — three per leg — to actuate its joints. Servo
+selection was one of the most consequential hardware decisions of the project, as the
+chosen motors directly determine the robot's payload capacity, speed, and battery runtime.
+
+Selection Criteria
+-------------------
+
+Candidate servos were evaluated against four criteria:
+
+1. **Stall torque** — must exceed the calculated peak joint torque (including a 2× safety factor)
+   under the robot's maximum expected load.
+2. **Speed** — must complete a full-range sweep within the gait step period at the target
+   walking speed.
+3. **Current draw** — aggregate stall current of all eighteen servos must not exceed the
+   power-distribution board's rated output.
+4. **Form factor** — must fit within the designed servo-mount pocket dimensions without
+   modification.
+
+Chosen Servo
+-------------
+
+.. note::
+   Replace the placeholder values below with your actual servo model and specifications.
+
+.. list-table::
+   :widths: 40 60
+   :header-rows: 0
+
+   * - Model
+     - *TBD (e.g. MG996R, DS3218, SG5010)*
+   * - Stall torque @ 6 V
+     - *TBD kg·cm*
+   * - Operating speed @ 6 V
+     - *TBD s / 60°*
+   * - Stall current
+     - *TBD mA*
+   * - Gear material
+     - *TBD (e.g. metal, nylon)*
+   * - Weight
+     - *TBD g*
+   * - Dimensions
+     - *TBD × TBD × TBD mm*
+
+PWM Control
+------------
+
+All servos are controlled via standard 50 Hz PWM signals. Pulse widths of 500 µs and 2500 µs
+correspond to the servo's minimum and maximum angular positions respectively, with 1500 µs
+representing the neutral (centre) position. The MCU generates PWM outputs using dedicated
+hardware timers to ensure jitter-free pulse edges at all times.
+
+To avoid the current surge that occurs when all eighteen servos are commanded simultaneously,
+the firmware staggers servo updates across consecutive control ticks, limiting the instantaneous
+current demand on the power rail.

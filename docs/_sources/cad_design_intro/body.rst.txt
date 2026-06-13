@@ -1,0 +1,53 @@
+.. _body_cad:
+
+=====
+Body
+=====
+
+.. Note on the image below:
+   - Replace ``_static/cad_body.png`` with your body-frame CAD screenshot or render.
+   - Adjust ``:width:`` as needed.
+   - To show only a specific view (e.g. top-down), crop using the raw-HTML technique.
+
+.. figure:: /_static/cad_body.png
+   :width: 600px
+   :align: center
+   :alt: Hexapod body frame CAD model
+
+   *Body frame CAD model — replace with your own render.*
+
+The body is the structural backbone of the hexapod. It provides six symmetric coxa servo
+mounting points, an enclosed electronics bay, and attachment points for the antenna mast and
+camera module.
+
+Key Dimensions
+---------------
+
+.. list-table::
+   :widths: 50 50
+   :header-rows: 1
+
+   * - Parameter
+     - Value
+   * - Overall length
+     - *TBD mm*
+   * - Overall width
+     - *TBD mm*
+   * - Electronics bay depth
+     - *TBD mm*
+   * - Wall thickness (structural walls)
+     - *TBD mm*
+   * - Coxa mount pitch circle radius
+     - *TBD mm*
+
+Structural Features
+--------------------
+
+- **Central spine rib** — a longitudinal rib running the full length of the body interior
+  provides bending stiffness and divides the electronics bay from the battery compartment.
+- **Gusset triangles** — internal gussets at each coxa mount distribute servo reaction torques
+  into the body shell rather than concentrating stress at the mount bolts.
+- **Snap-fit access lid** — four snap-fit clips retain the dorsal lid panel; a 1 mm lip
+  provides positive location. The lid can be removed with a flat tool in under ten seconds.
+- **Ventilation slots** — two rows of 2 mm slots on the lateral faces allow convective
+  airflow over the MCU and power board, limiting temperature rise under sustained operation.

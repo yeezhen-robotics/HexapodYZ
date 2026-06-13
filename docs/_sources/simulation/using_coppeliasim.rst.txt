@@ -1,0 +1,48 @@
+.. _using_coppeliasim:
+
+==================
+Using CoppeliaSim
+==================
+
+CoppeliaSim (formerly V-REP) is a versatile robot simulation environment that supports
+rigid-body dynamics, joint actuation, proximity sensors, and scripted control logic. It was
+chosen for this project because of its built-in support for serial and socket communication,
+which allowed the real Arduino-based controller to drive the virtual hexapod directly —
+making the transition from simulation to hardware seamless.
+
+Setting Up the Scene
+---------------------
+
+The simulation scene was constructed as follows:
+
+1. **Body frame** — a cuboid primitive sized to match the target CAD dimensions was used as
+   the main body. This was replaced by the actual CAD mesh in later iterations once the frame
+   geometry was finalised.
+2. **Leg assemblies** — each leg was built from three revolute-jointed links (coxa, femur,
+   tibia) with link lengths matching the intended 3-D printed parts.
+3. **Servo limits** — joint angle limits were set to match the physical servo range (±90° for
+   the coxa, 0°–120° for the femur and tibia) to expose constraint violations early.
+4. **Ground plane** — a flat plane with a realistic friction coefficient was used for initial
+   gait development. Rough-terrain patches were added in later tests.
+5. **Collision shapes** — simplified bounding boxes were assigned to each link to enable
+   self-collision detection.
+
+Running the Simulation
+-----------------------
+
+The simulation was run in synchronous stepping mode so that the physics engine advanced only
+when the control script signalled it. This gave the controller a consistent, deterministic
+time-step regardless of host-machine load and made it straightforward to compare simulated and
+hardware trajectories.
+
+.. code-block:: lua
+
+   -- CoppeliaSim Lua snippet: synchronous step trigger (place in child script)
+   sim.setStepping(true)
+   while true do
+       sim.step()   -- advance one physics tick
+   end
+
+Each simulation run was logged to a CSV file containing joint angles, foot contact states,
+and body pose. These logs were used to tune gait parameters (step height, duty cycle, stance
+width) before any physical testing.

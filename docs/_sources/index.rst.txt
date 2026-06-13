@@ -1,0 +1,21 @@
+.. Hexapod Documentation Master File
+
+==================================
+Hexapod Robot Documentation
+==================================
+
+Welcome to the Hexapod project documentation. This documentation covers the full development
+lifecycle of the hexapod robot — from initial concept and simulation through CAD design,
+electronics, and the software algorithms that bring it to life.
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents
+
+   introduction/index
+   robot/index
+   simulation/index
+   cad_design_process/index
+   cad_design_intro/index
+   electronics/index
+   software/index

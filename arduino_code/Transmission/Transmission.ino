@@ -23,7 +23,7 @@
 #define Controller_LED 3
 
 float frontback_L, leftright_L, frontback_R, leftright_R;
-int magnitude_movement, angle_movement, operation_mode, left_joy_button, right_joy_button;
+int magnitude_movement, angle_movement, magnitude_watch, angle_watch, operation_mode, left_joy_button, right_joy_button;
 
 RF24 radio(8,7,0);                        /* Creating instance 'radio'  ( CE , CSN )   CE -> D7 | CSN -> D8 */                              
 const byte Address[6] = "00009" ;     /* Address to which data to be transmitted*/

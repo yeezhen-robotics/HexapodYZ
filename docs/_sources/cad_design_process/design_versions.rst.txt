@@ -1,0 +1,79 @@
+.. _design_versions:
+
+======================
+3 Versions of Design
+======================
+
+The mechanical design of the hexapod went through three major iterations before reaching
+the final configuration. Each version addressed specific shortcomings identified either
+in simulation or through physical prototyping.
+
+Version 1 — Proof of Concept
+------------------------------
+
+.. Note on the image below:
+   - Replace ``_static/cad_v1.png`` with your Version 1 CAD screenshot or render.
+   - Adjust ``:width:`` as needed (e.g. ``600px``).
+
+.. figure:: /_static/cad_v1.png
+   :width: 600px
+   :align: center
+   :alt: CAD Design Version 1
+
+   *Version 1 CAD model — replace with your own screenshot or render.*
+
+Version 1 established the basic geometry: a rectangular body with six legs arranged in two
+rows of three. Servo mounts were designed for press-fit attachment, which proved insufficiently
+rigid under the dynamic loads of the tripod gait. The leg links were initially under-dimensioned,
+resulting in noticeable deflection at the tibia tip under the robot's own weight.
+
+**Key issues identified:**
+
+- Press-fit servo mounts loosened after repeated actuation cycles.
+- Tibia link wall thickness insufficient — visible flex under load.
+- Electronics bay inaccessible without full disassembly of the body.
+
+Version 2 — Structural Refinement
+-----------------------------------
+
+.. Note on the image below:
+   - Replace ``_static/cad_v2.png`` with your Version 2 CAD screenshot or render.
+
+.. figure:: /_static/cad_v2.png
+   :width: 600px
+   :align: center
+   :alt: CAD Design Version 2
+
+   *Version 2 CAD model — replace with your own screenshot or render.*
+
+Version 2 addressed the structural deficiencies identified in Version 1. Servo mounts were
+redesigned with M2 bolt-through interfaces. The tibia wall thickness was increased by 1.5 mm
+and the cross-section transitioned to a hollow-rectangular profile for better specific
+stiffness. An access panel was added to the top of the body, enabling the electronics bay
+to be opened without disturbing the leg assemblies.
+
+**Key issues remaining:**
+
+- Centre of mass too far forward, causing pitch instability at speed.
+- Coxa joint range limited by body-frame geometry — only ±40° achievable.
+- Antenna mast obstructed the camera field of view.
+
+Version 3 — Final Iteration
+-----------------------------
+
+.. Note on the image below:
+   - Replace ``_static/cad_v3.png`` with your Version 3 CAD screenshot or render.
+
+.. figure:: /_static/cad_v3.png
+   :width: 600px
+   :align: center
+   :alt: CAD Design Version 3
+
+   *Version 3 CAD model — replace with your own screenshot or render.*
+
+Version 3 is the design that was fabricated and documented in this project. The battery was
+repositioned to the rear of the body cavity, correcting the centre-of-mass offset. Body
+clearances around the coxa joints were enlarged to allow ±70° sweep. The antenna mast was
+relocated to the rear-left of the body, clearing the camera's forward field of view.
+
+A detailed explanation of the final design follows in the next section.

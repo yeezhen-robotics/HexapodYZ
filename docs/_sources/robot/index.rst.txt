@@ -1,0 +1,11 @@
+.. _robot:
+
+==========
+The Robot
+==========
+
+.. toctree::
+   :maxdepth: 2
+
+   the_controller
+   the_robot

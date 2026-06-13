@@ -1,0 +1,136 @@
+.. _the_controller:
+
+===============
+The Controller
+===============
+
+.. raw:: html
+
+   <div style="display: flex; align-items: flex-start; gap: 2rem; margin-bottom: 2rem;">
+
+     <!-- LEFT: Controller image placeholder -->
+     <div style="flex: 0 0 auto;">
+
+.. Note on the image below:
+   - Replace ``_static/controller.jpg`` with the path to your controller photograph.
+   - Adjust ``:width:`` (e.g. ``380px``) to balance with the text column.
+   - To crop, use the raw-HTML ``<div>`` overflow technique described in ``how_did_i_do_it``.
+
+.. figure:: /_static/controller.jpg
+   :width: 380px
+   :align: left
+   :alt: Hexapod handheld controller
+
+   *Controller unit — replace with your own photograph.*
+
+.. raw:: html
+
+     </div>
+
+     <!-- RIGHT: text -->
+     <div style="flex: 1;">
+
+The handheld controller is the primary human-interface device for the hexapod. It communicates
+with the robot via the onboard antenna module, transmitting directional commands, speed
+setpoints, and mode-selection signals in real time.
+
+The controller was designed to be ergonomic and low-latency. A dedicated microcontroller on
+the controller board samples the joystick axes and button states, packages them into a compact
+command frame, and dispatches the frame at a fixed rate over the wireless link. On the robot
+side, the main MCU decodes incoming frames and forwards the relevant setpoints to the gait
+scheduler and IK solver.
+
+Key design decisions for the controller include:
+
+- **Compact command frame** — only the minimum required data is transmitted per cycle to reduce
+  airtime and latency.
+- **Heartbeat monitoring** — if the robot does not receive a valid frame within a configurable
+  timeout window it enters a safe-stop state.
+- **Mode selector** — a rotary switch allows the operator to toggle between manual drive,
+  autonomous patrol, and camera-tracking modes.
+
+.. raw:: html
+
+     </div>
+   </div>
+
+Bill of Materials — Controller
+-------------------------------
+
+.. note::
+   Replace the placeholder cells below with your actual component names, part numbers,
+   quantities, suppliers, and unit costs. Add or remove rows as needed.
+
+**Mechanical Components**
+
+.. list-table::
+   :widths: 30 20 15 20 15
+   :header-rows: 1
+
+   * - Component
+     - Part / Model
+     - Qty
+     - Supplier
+     - Unit Cost
+   * - A — Enclosure / shell
+     - *TBD*
+     - *TBD*
+     - *TBD*
+     - *TBD*
+   * - B — Joystick module mount
+     - *TBD*
+     - *TBD*
+     - *TBD*
+     - *TBD*
+   * - C — Button panel bracket
+     - *TBD*
+     - *TBD*
+     - *TBD*
+     - *TBD*
+   * - D — Battery compartment tray
+     - *TBD*
+     - *TBD*
+     - *TBD*
+     - *TBD*
+   * - E — Fasteners / standoffs
+     - *TBD*
+     - *TBD*
+     - *TBD*
+     - *TBD*
+
+**Electrical Components**
+
+.. list-table::
+   :widths: 30 20 15 20 15
+   :header-rows: 1
+
+   * - Component
+     - Part / Model
+     - Qty
+     - Supplier
+     - Unit Cost
+   * - A — Microcontroller
+     - *TBD*
+     - *TBD*
+     - *TBD*
+     - *TBD*
+   * - B — Wireless transceiver
+     - *TBD*
+     - *TBD*
+     - *TBD*
+     - *TBD*
+   * - C — Joystick module
+     - *TBD*
+     - *TBD*
+     - *TBD*
+     - *TBD*
+   * - D — Push buttons / switches
+     - *TBD*
+     - *TBD*
+     - *TBD*
+     - *TBD*
+   * - E — Battery / power regulator
+     - *TBD*
+     - *TBD*
+     - *TBD*
+     - *TBD*

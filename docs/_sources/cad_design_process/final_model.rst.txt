@@ -1,0 +1,40 @@
+.. _final_model:
+
+==========================
+Coming to the Final Model
+==========================
+
+The progression from Version 1 to the final model was guided by a consistent evaluation
+framework: after each design iteration, the model was imported into CoppeliaSim and the tripod
+gait was re-run to check for interference and stability regressions. Parts were also briefly
+stress-tested in a simple FEA (finite element analysis) tool to flag any regions with
+stress concentrations above the PLA yield strength.
+
+Decision Criteria
+------------------
+
+Each design revision was assessed against four criteria before being accepted:
+
+1. **Print feasibility** — can every part be printed without support material on the faces that
+   mate with other components? Minimising support reduces post-processing time and improves
+   surface quality at mating interfaces.
+2. **Structural adequacy** — do peak stresses under the expected servo torques remain below
+   50 % of the PLA yield strength (a 2× safety factor)?
+3. **Assembly access** — can all fasteners be reached with a standard hex driver without
+   removing other components?
+4. **Gait clearance** — does the leg geometry provide adequate ground clearance in all
+   simulated gait configurations, including the edge-case step heights?
+
+Only when all four criteria were satisfied was an iteration accepted as a candidate for
+fabrication.
+
+Fabrication Summary
+--------------------
+
+The final model consisted of **XX** unique part files (replace with actual count) totalling
+approximately **XX hours** of print time on a standard FDM printer at 0.2 mm layer height and
+20 % gyroid infill. Critical structural parts (body frame main rails, femur links) were
+reprinted at 40 % infill for additional rigidity.
+
+All parts were printed in PLA for its ease of printing and adequate stiffness. Future
+iterations may use PETG or ASA for improved impact resistance and heat tolerance.

@@ -1,0 +1,74 @@
+.. _legs_cad:
+
+==========================
+Legs — Coxa, Femur, Tibia
+==========================
+
+Each of the six legs is composed of three links — the **coxa**, **femur**, and **tibia** —
+connected by revolute joints actuated by hobby-grade servo motors. All six legs share identical
+part files; mirroring is handled in the assembly rather than by creating separate left- and
+right-hand variants.
+
+Coxa
+-----
+
+.. Note on the image:
+   - Replace ``_static/cad_coxa.png`` with your coxa CAD screenshot.
+
+.. figure:: /_static/cad_coxa.png
+   :width: 500px
+   :align: center
+   :alt: Coxa link CAD model
+
+   *Coxa link — replace with your own render.*
+
+The coxa is the hip segment. It attaches directly to the body's coxa servo mount and spans
+horizontally from the body side to the femur servo. The coxa rotation axis is vertical,
+giving the leg its lateral sweep angle.
+
+- **Length:** *TBD mm* (centre-to-centre)
+- **Cross-section:** Hollow rectangular, *TBD × TBD mm* outer, *TBD mm* wall
+- **Servo interface:** M2 bolt-through clamp on the proximal end; servo horn press-fit on the distal end
+
+Femur
+------
+
+.. Note on the image:
+   - Replace ``_static/cad_femur.png`` with your femur CAD screenshot.
+
+.. figure:: /_static/cad_femur.png
+   :width: 500px
+   :align: center
+   :alt: Femur link CAD model
+
+   *Femur link — replace with your own render.*
+
+The femur connects the coxa to the tibia. Its rotation axis is horizontal and perpendicular
+to the body's longitudinal axis, giving the leg its lift (elevation) angle. The femur is the
+longest link and therefore the primary contributor to foot reachable-workspace depth.
+
+- **Length:** *TBD mm* (centre-to-centre)
+- **Cross-section:** I-beam profile to maximise second moment of area in the bending plane
+- **Servo interface:** Servo horn press-fit with M2 retention screw on the proximal end
+
+Tibia
+------
+
+.. Note on the image:
+   - Replace ``_static/cad_tibia.png`` with your tibia CAD screenshot.
+
+.. figure:: /_static/cad_tibia.png
+   :width: 500px
+   :align: center
+   :alt: Tibia link CAD model
+
+   *Tibia link — replace with your own render.*
+
+The tibia is the lower leg. It connects the femur to the foot tip. The tibia rotation axis
+is parallel to the femur axis, allowing the leg to extend or retract the foot along an arc
+in the sagittal plane. The distal end terminates in a hemispherical foot tip that minimises
+contact-point variation with terrain irregularities.
+
+- **Length:** *TBD mm* (centre-to-centre)
+- **Cross-section:** Solid circular, *TBD mm* diameter, with a chamfered base for overhang-free printing
+- **Foot tip:** Hemispherical, *TBD mm* radius; printed separately in TPU for compliant ground contact
