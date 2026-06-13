@@ -1,8 +1,8 @@
 .. _servos:
 
-=======
+======
 Servos
-=======
+======
 
 The hexapod uses eighteen servo motors — three per leg — to actuate its joints. Servo
 selection was one of the most consequential hardware decisions of the project, as the

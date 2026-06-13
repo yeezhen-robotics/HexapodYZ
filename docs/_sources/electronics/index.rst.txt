@@ -1,8 +1,8 @@
 .. _electronics:
 
-============
+===========
 Electronics
-============
+===========
 
 .. toctree::
    :maxdepth: 2

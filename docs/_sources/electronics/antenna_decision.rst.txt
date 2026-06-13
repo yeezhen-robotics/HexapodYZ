@@ -1,0 +1,69 @@
+.. _antenna_decision:
+
+=================
+Antenna Decision
+=================
+
+Selecting the right wireless link for the hexapod required balancing range, latency,
+power consumption, and ease of integration with the chosen MCU. Three candidate technologies
+were evaluated before a final decision was made.
+
+Candidate Technologies
+-----------------------
+
+.. list-table::
+   :widths: 20 20 20 20 20
+   :header-rows: 1
+
+   * - Technology
+     - Range (typical)
+     - Latency
+     - Current Draw
+     - Integration Complexity
+   * - nRF24L01+ (2.4 GHz)
+     - ~100 m (open air)
+     - <1 ms
+     - ~11 mA TX
+     - Low (SPI)
+   * - HC-12 (433 MHz)
+     - ~1000 m (open air)
+     - ~20 ms
+     - ~100 mA TX
+     - Low (UART)
+   * - ESP8266 (Wi-Fi)
+     - ~50 m (indoors)
+     - ~5–20 ms
+     - ~170 mA TX
+     - Medium (AT commands / SDK)
+
+Decision Rationale
+-------------------
+
+The **nRF24L01+** module was selected for the following reasons:
+
+- **Latency** — sub-millisecond over-the-air latency is well below the 20 ms control cycle
+  period, ensuring that control commands arrive within the same tick they are issued.
+- **Current draw** — at ~11 mA transmit current, the module's contribution to the overall
+  power budget is negligible compared to the servo load.
+- **SPI integration** — the nRF24L01+ uses a standard four-wire SPI bus that the chosen MCU
+  supports natively, simplifying firmware development.
+- **Proven ecosystem** — the RF24 Arduino library provides a well-tested, low-overhead
+  abstraction for packet transmission and acknowledgement.
+
+The HC-12 was ruled out due to its high transmit current and the additional antenna-licensing
+considerations associated with 433 MHz operation in some regions. The ESP8266 was eliminated
+because Wi-Fi connection setup latency is incompatible with real-time control requirements,
+and its higher current draw would complicate the power budget.
+
+Physical Placement
+-------------------
+
+The nRF24L01+ module is mounted on the rear-left corner of the body frame, oriented so that
+its onboard PCB trace antenna points upward and rearward — away from the servo wiring harness,
+which is the primary source of RF interference. A small ferrite bead on the 3.3 V supply line
+further reduces conducted noise from the servo power rail reaching the module's VCC pin.
+
+.. note::
+   If your deployment environment differs (indoor, long-range outdoor, obstructed), revisit
+   the antenna choice. The HC-12 at 433 MHz is a drop-in upgrade for long-range applications
+   at the cost of higher current draw.

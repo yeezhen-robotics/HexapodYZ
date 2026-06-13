@@ -1,8 +1,8 @@
 .. _mounts_cad:
 
-=======
+======
 Mounts
-=======
+======
 
 .. Note on the image:
    - Replace ``_static/cad_mounts.png`` with your servo-mount or bracket CAD screenshot.

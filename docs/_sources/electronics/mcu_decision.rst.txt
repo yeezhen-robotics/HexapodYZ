@@ -1,0 +1,122 @@
+.. _mcu_decision:
+
+============
+MCU Decision
+============
+
+The microcontroller is the computational heart of the hexapod. It must simultaneously manage
+eighteen PWM channels, process incoming wireless command frames, execute the inverse kinematics
+solver and gait scheduler, and optionally handle camera-telemetry data — all within a 20 ms
+real-time control cycle.
+
+Requirements
+-------------
+
+.. list-table::
+   :widths: 40 60
+   :header-rows: 1
+
+   * - Requirement
+     - Rationale
+   * - ≥ 18 PWM-capable outputs
+     - One per servo; must be hardware-generated to avoid jitter.
+   * - SPI bus
+     - For the nRF24L01+ wireless module.
+   * - UART (×2 minimum)
+     - One for debug/programming; one for the camera telemetry link.
+   * - ≥ 32 KB flash
+     - IK solver, gait scheduler, and RF24 library comfortably fit in 32 KB.
+   * - ≥ 2 KB SRAM
+     - Runtime state for all 18 joint angles plus gait phase variables.
+   * - 3.3 V / 5 V tolerant I/O
+     - Servo PWM inputs are 5 V; the nRF24L01+ is a 3.3 V device.
+   * - Arduino ecosystem support
+     - Speeds firmware development; large community and library availability.
+
+Candidates Evaluated
+---------------------
+
+.. list-table::
+   :widths: 25 15 15 15 15 15
+   :header-rows: 1
+
+   * - MCU Board
+     - Clock
+     - Flash
+     - SRAM
+     - PWM Outputs
+     - Notes
+   * - Arduino Mega 2560
+     - 16 MHz
+     - 256 KB
+     - 8 KB
+     - 15
+     - 5 V native; insufficient PWM channels
+   * - Arduino Mega + PCA9685
+     - 16 MHz
+     - 256 KB
+     - 8 KB
+     - 15 + 16 (I²C)
+     - PCA9685 offloads PWM; viable but adds I²C overhead
+   * - STM32F103 ("Blue Pill")
+     - 72 MHz
+     - 64 KB
+     - 20 KB
+     - 15
+     - Fast; 3.3 V I/O; steeper learning curve
+   * - *TBD — your chosen MCU*
+     - *TBD*
+     - *TBD*
+     - *TBD*
+     - *TBD*
+     - *TBD*
+
+Chosen MCU
+-----------
+
+.. note::
+   Replace this section with your actual MCU choice and justification.
+
+The **[YOUR MCU HERE]** was selected because it satisfies all requirements with margin:
+
+- Sufficient hardware PWM channels eliminate the need for an external PWM expander, reducing
+  BOM complexity and I²C bus load.
+- Its clock speed provides adequate headroom to run the IK solver — which involves
+  trigonometric operations — within the 20 ms control budget.
+- 5 V-tolerant I/O pins allow direct connection to servo signal lines without level shifters.
+- The broad Arduino library support (including RF24 and the camera library) accelerated
+  firmware development significantly.
+
+PWM Timer Allocation
+---------------------
+
+The firmware allocates hardware timer channels as follows:
+
+.. list-table::
+   :widths: 20 20 60
+   :header-rows: 1
+
+   * - Timer
+     - Channels Used
+     - Assignment
+   * - TIMx
+     - CH1–CH3
+     - Front-left leg (coxa, femur, tibia)
+   * - TIMx
+     - CH1–CH3
+     - Front-right leg
+   * - TIMx
+     - CH1–CH3
+     - Mid-left leg
+   * - TIMx
+     - CH1–CH3
+     - Mid-right leg
+   * - TIMx
+     - CH1–CH3
+     - Rear-left leg
+   * - TIMx
+     - CH1–CH3
+     - Rear-right leg
+
+.. note::
+   Fill in the actual timer peripheral identifiers (e.g. TIM1, TIM2 …) for your MCU.

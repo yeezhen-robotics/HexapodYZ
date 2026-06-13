@@ -1,0 +1,102 @@
+.. _signal_compaction:
+
+=================
+Signal Compaction
+=================
+
+Transmitting raw joint-angle data for all eighteen servos at 50 Hz would require substantial
+wireless bandwidth and impose tight timing constraints on the radio link. The signal-compaction
+layer reduces the size of each transmitted command frame by exploiting two properties of the
+hexapod's motion: **symmetry** and **bounded range**.
+
+Motivation
+-----------
+
+A naïve encoding of eighteen joint angles as 16-bit floats produces a 36-byte payload per
+control tick. At 50 Hz this represents 1800 bytes per second — manageable for the nRF24L01+
+(max payload 32 bytes per packet), but wasteful. By exploiting the structure of the tripod
+gait, the payload can be reduced substantially, improving effective latency and leaving
+headroom for future telemetry channels.
+
+Symmetry Exploitation
+----------------------
+
+The tripod gait imposes a strong symmetry constraint: at any instant, the three legs of
+Tripod A are executing mirror-image motions of the three legs of Tripod B (offset by half a
+gait period). This means that a **single phase parameter** *φ* — the current gait phase —
+together with a small set of gait parameters fully determines the desired joint angles for
+all eighteen servos. The IK solver on the robot reconstructs the angles locally from this
+compact representation.
+
+The controller therefore only needs to transmit:
+
+- The current gait phase *φ* (8-bit unsigned integer, scaled to [0, 255]).
+- A 2-D velocity command (forward speed, yaw rate) — 2 × 8-bit signed integers.
+- A mode byte (gait enable, camera-track enable, emergency stop).
+
+Total: **4 bytes per frame**, compared to 36 bytes for raw angles — a **9× reduction**.
+
+Bounded-Range Quantisation
+---------------------------
+
+For the camera-controller IK (see :ref:`inverse_kinematics_camera`), which does transmit
+explicit joint angles, a bounded-range quantisation scheme is used. Each joint angle is known
+a priori to lie within a fixed range (e.g. coxa: ±70°, femur: 0°–120°, tibia: 0°–120°).
+Mapping this range linearly onto an 8-bit unsigned integer (0–255) gives a resolution of
+approximately 0.5°–0.9° per LSB — sufficient for smooth servo motion given the mechanical
+backlash of the servo gearboxes.
+
+The mapping is:
+
+.. code-block:: c
+
+   // Encode angle (degrees) to 8-bit byte
+   uint8_t encode_angle(float angle_deg, float min_deg, float max_deg) {
+       float normalised = (angle_deg - min_deg) / (max_deg - min_deg);
+       return (uint8_t)(normalised * 255.0f + 0.5f);   // round to nearest
+   }
+
+   // Decode 8-bit byte back to angle (degrees)
+   float decode_angle(uint8_t byte, float min_deg, float max_deg) {
+       return min_deg + (byte / 255.0f) * (max_deg - min_deg);
+   }
+
+Frame Structure Summary
+------------------------
+
+.. list-table::
+   :widths: 15 15 20 50
+   :header-rows: 1
+
+   * - Byte
+     - Field
+     - Type
+     - Description
+   * - 0
+     - ``SYNC``
+     - ``uint8`` = 0xAA
+     - Frame start marker.
+   * - 1
+     - ``MODE``
+     - ``uint8`` (bit-field)
+     - Bit 0: gait enable. Bit 1: camera-track. Bit 7: e-stop.
+   * - 2
+     - ``FWD``
+     - ``int8``
+     - Forward velocity command (−127 = full reverse, +127 = full forward).
+   * - 3
+     - ``YAW``
+     - ``int8``
+     - Yaw-rate command (−127 = full left, +127 = full right).
+   * - 4
+     - ``PHASE``
+     - ``uint8``
+     - Gait phase *φ* ∈ [0, 255].
+   * - 5
+     - ``CHK``
+     - ``uint8``
+     - XOR checksum of bytes 0–4.
+
+Total frame size: **6 bytes**. At 50 Hz this is 300 bytes/s — well within the nRF24L01+'s
+achievable throughput and leaving the radio free for uplink telemetry (battery voltage, IMU
+data) in the opposite direction.

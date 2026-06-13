@@ -1,8 +1,8 @@
 .. _body_cad:
 
-=====
+====
 Body
-=====
+====
 
 .. Note on the image below:
    - Replace ``_static/cad_body.png`` with your body-frame CAD screenshot or render.

@@ -1,8 +1,8 @@
 .. _design_explanation:
 
-==========================
+======================
 Explanation on the Design
-==========================
+======================
 
 This section provides a concise rationale for the principal design choices in the final model.
 Detailed part-level descriptions are given in the :ref:`cad_design_intro` chapter.

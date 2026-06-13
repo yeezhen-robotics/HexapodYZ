@@ -1,8 +1,8 @@
 .. _timelines:
 
-==========
+=========
 Timelines
-==========
+=========
 
 .. Note on the image below:
    - Replace ``_static/project_timeline.png`` with your Gantt chart, roadmap screenshot,

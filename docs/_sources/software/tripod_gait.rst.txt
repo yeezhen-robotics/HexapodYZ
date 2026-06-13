@@ -1,0 +1,113 @@
+.. _tripod_gait:
+
+====================
+Tripod Gait Control
+====================
+
+The tripod gait is the primary locomotion pattern used by this hexapod. It divides the six
+legs into two groups of three — **Tripod A** (front-left, mid-right, rear-left) and
+**Tripod B** (front-right, mid-left, rear-right) — that alternate between a stance phase and
+a swing phase. At any instant, one tripod is on the ground bearing the robot's weight while
+the other is in the air stepping forward. This guarantees **static stability** throughout the
+gait cycle, because the centre of mass always lies within the support polygon formed by the
+three grounded feet.
+
+Gait Phases
+------------
+
+Each leg cycles through two phases within one gait period *T*:
+
+- **Stance phase** (duration: *T × duty_cycle*) — the foot is on the ground. The leg pushes
+  rearward relative to the body, propelling the robot forward.
+- **Swing phase** (duration: *T × (1 − duty_cycle)*) — the foot is in the air. The leg lifts,
+  steps forward to the next foot-placement position, and descends to touch down.
+
+The duty cycle (fraction of the period spent in stance) is set to **0.5** for equal stance and
+swing durations. This maximises forward speed while keeping the controller timing symmetric
+and easy to reason about.
+
+Foot Trajectory
+----------------
+
+During the swing phase, each foot follows a **half-ellipse** trajectory in the sagittal plane:
+
+.. code-block:: text
+
+   Lift-off                         Touch-down
+      o ────────────────────────────── o
+       ╲                              ╱
+        ╲      (swing arc peak)      ╱
+         ╲          *               ╱
+          ╲________________________╱
+                (stance arc)
+
+- **Horizontal component** — linear interpolation from lift-off position to touch-down
+  position at constant horizontal speed.
+- **Vertical component** — sinusoidal lift profile: ``z = step_height × sin(π × t / T_swing)``,
+  where *t* is the time elapsed within the swing phase. The sinusoidal profile produces smooth
+  acceleration through the apex and avoids the sharp velocity reversals of a trapezoidal lift.
+
+Gait Scheduler Implementation
+-------------------------------
+
+The gait scheduler runs at a fixed 50 Hz update rate (one tick per PWM period). Each tick it:
+
+1. Advances the gait phase counter for each leg by ``Δφ = (1/50) / T`` (where *T* is the
+   gait period in seconds).
+2. Determines whether each leg is in stance or swing based on its phase counter relative to
+   the duty-cycle boundary.
+3. Computes the desired foot position in body-frame Cartesian coordinates using the phase
+   and trajectory equations above.
+4. Passes the desired foot position to the IK solver to obtain joint angles.
+5. Writes the joint angles to the PWM channels.
+
+.. code-block:: c
+
+   // Simplified gait scheduler tick (pseudo-code)
+   void gait_tick(void) {
+       for (int leg = 0; leg < 6; leg++) {
+           phase[leg] += PHASE_INCREMENT;
+           if (phase[leg] >= 1.0f) phase[leg] -= 1.0f;
+
+           float x, y, z;
+           if (phase[leg] < DUTY_CYCLE) {
+               // Stance: move foot rearward at body speed
+               compute_stance_position(leg, phase[leg], &x, &y, &z);
+           } else {
+               // Swing: follow half-ellipse to next step position
+               float t_swing = (phase[leg] - DUTY_CYCLE) / (1.0f - DUTY_CYCLE);
+               compute_swing_position(leg, t_swing, &x, &y, &z);
+           }
+           ik_solve(leg, x, y, z);   // sets pwm_angles[leg][0..2]
+       }
+       pwm_update_all();
+   }
+
+Gait Parameters
+----------------
+
+.. list-table::
+   :widths: 35 20 45
+   :header-rows: 1
+
+   * - Parameter
+     - Value
+     - Description
+   * - Gait period *T*
+     - *TBD ms*
+     - Duration of one complete step cycle per leg.
+   * - Duty cycle
+     - 0.5
+     - Fraction of *T* spent in stance.
+   * - Step height
+     - *TBD mm*
+     - Peak foot clearance above ground during swing.
+   * - Step length
+     - *TBD mm*
+     - Horizontal distance from lift-off to touch-down.
+   * - Stance width
+     - *TBD mm*
+     - Lateral distance from body centreline to foot contact.
+   * - Update rate
+     - 50 Hz
+     - Gait scheduler and PWM refresh frequency.

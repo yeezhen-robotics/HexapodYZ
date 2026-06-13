@@ -1,0 +1,12 @@
+.. _software:
+
+======================
+Software / Algorithms
+======================
+
+.. toctree::
+   :maxdepth: 2
+
+   tripod_gait
+   signal_compaction
+   inverse_kinematics_camera

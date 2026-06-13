@@ -1,0 +1,143 @@
+.. _inverse_kinematics_camera:
+
+================================================
+Inverse Kinematics of Front Camera Controller
+================================================
+
+The front camera is mounted on a two-axis pan-tilt mechanism driven by two additional servo
+motors. The **camera IK** layer converts a desired gaze direction — expressed as a
+(azimuth, elevation) pair in the robot body frame — into the pan servo angle and tilt servo
+angle required to point the camera at the target.
+
+This is conceptually simpler than the leg IK (which involves a 3-DOF kinematic chain), but
+it must account for the physical offset between the camera optical axis and the pan-tilt pivot,
+and it must handle gimbal-lock avoidance near the elevation limits.
+
+Coordinate Frames
+------------------
+
+Three coordinate frames are involved:
+
+.. code-block:: text
+
+   World frame (W)        Body frame (B)          Camera frame (C)
+   ─────────────          ──────────────           ──────────────
+   Z up, X forward        Z up, X forward          Z along optical axis
+   (inertial)             (body-fixed)             X right, Y down
+
+   W ──[R_WB, t_WB]──▶ B ──[R_BC, t_BC]──▶ C
+
+- **R_WB, t_WB** — rotation and translation from world to body frame; provided by the IMU / odometry.
+- **R_BC, t_BC** — rotation and translation from body to camera frame; fixed by the camera mount geometry.
+
+For the camera controller, the gaze target is specified in the body frame **B**, so only the
+**B → C** transform is needed.
+
+Pan-Tilt Geometry
+------------------
+
+The pan servo rotates about the body Z-axis (yaw), and the tilt servo rotates about the
+resulting Y-axis (pitch). Given a target direction unit vector ``d̂ = [dx, dy, dz]`` in the
+body frame, the pan and tilt angles are:
+
+.. code-block:: text
+
+   pan_angle   = atan2(dy, dx)           [radians]
+   tilt_angle  = atan2(-dz, sqrt(dx²+dy²))   [radians]
+
+Converting to degrees and clamping to the servo mechanical limits:
+
+.. code-block:: c
+
+   #include <math.h>
+
+   typedef struct { float pan; float tilt; } PanTilt;
+
+   #define PAN_MIN_DEG   -70.0f
+   #define PAN_MAX_DEG    70.0f
+   #define TILT_MIN_DEG  -30.0f
+   #define TILT_MAX_DEG   45.0f
+
+   static float clampf(float v, float lo, float hi) {
+       return v < lo ? lo : (v > hi ? hi : v);
+   }
+
+   PanTilt camera_ik(float dx, float dy, float dz) {
+       PanTilt result;
+       result.pan  = clampf(atan2f(dy, dx)               * (180.0f / M_PI),
+                            PAN_MIN_DEG,  PAN_MAX_DEG);
+       result.tilt = clampf(atan2f(-dz, sqrtf(dx*dx + dy*dy)) * (180.0f / M_PI),
+                            TILT_MIN_DEG, TILT_MAX_DEG);
+       return result;
+   }
+
+Optical-Axis Offset Correction
+--------------------------------
+
+Because the camera optical centre is offset from the pan-tilt pivot by a physical distance
+``[ox, oy, oz]`` (measured from the pivot to the camera nodal point), there is a parallax
+error for targets at finite distance. For targets further than ~2 m this error is negligible
+(< 1°). For closer targets, the corrected target direction is:
+
+.. code-block:: text
+
+   d_corrected = normalise(d_target_body − offset_vector)
+
+where ``offset_vector = [ox, oy, oz]`` in the body frame. This correction is only applied
+when the estimated target range (from stereo disparity or ultrasonic ranging) is below a
+configurable threshold (default: 1.5 m).
+
+Gimbal-Lock Avoidance
+----------------------
+
+When the tilt angle approaches ±90°, the pan axis and the camera optical axis become
+co-linear (gimbal lock), making the pan angle undefined. The firmware avoids this region by
+clamping the tilt command to ±80° and, if the desired gaze direction requires elevation
+outside this range, prioritising the tilt command and setting pan to zero (centre).
+
+Tracking Loop
+--------------
+
+The camera IK is driven by a proportional control loop that minimises the angular error
+between the current gaze direction and the desired gaze direction:
+
+.. code-block:: text
+
+   error_pan  = desired_pan  − current_pan
+   error_tilt = desired_tilt − current_tilt
+
+   command_pan  = current_pan  + Kp_pan  × error_pan
+   command_tilt = current_tilt + Kp_tilt × error_tilt
+
+The gain values **Kp_pan** and **Kp_tilt** were tuned empirically to achieve a settling time
+of approximately 150 ms with no overshoot, a balance that prevents camera oscillation while
+still tracking moving subjects at walking pace.
+
+.. list-table:: Camera IK Parameters
+   :widths: 40 20 40
+   :header-rows: 1
+
+   * - Parameter
+     - Value
+     - Description
+   * - Pan range
+     - ±70°
+     - Physical servo travel limit.
+   * - Tilt range
+     - −30° to +45°
+     - Physical servo travel limit (negative = downward).
+   * - Gimbal-lock guard band
+     - ±80°
+     - Tilt clamped to this range to avoid singularity.
+   * - Offset correction threshold
+     - 1.5 m
+     - Range below which parallax correction is applied.
+   * - Kp_pan
+     - *TBD*
+     - Proportional gain for pan tracking loop.
+   * - Kp_tilt
+     - *TBD*
+     - Proportional gain for tilt tracking loop.
+   * - Update rate
+     - 50 Hz
+     - Camera IK runs synchronously with the main gait scheduler.

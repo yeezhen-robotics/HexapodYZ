@@ -1,8 +1,8 @@
 .. _master_sketches:
 
-=====================================
+==============================
 Learning How to Make Master Sketches
-=====================================
+==============================
 
 A **master sketch** (sometimes called a "skeleton sketch") is a top-level 2-D sketch that
 encodes the key dimensional constraints of an entire assembly. Child components reference

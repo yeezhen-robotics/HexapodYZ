@@ -1,0 +1,97 @@
+.. _power_distribution_board:
+
+=========================
+Power Distribution Board
+=========================
+
+The power distribution board (PDB) regulates and distributes power from the main battery to
+the servo rail, the MCU, and the wireless module. Separating the servo supply from the logic
+supply is essential: under load, servo motors generate voltage spikes and current transients
+that can corrupt MCU operation if the two rails share the same supply path without adequate
+decoupling.
+
+.. raw:: html
+
+   <div style="display: flex; align-items: flex-start; gap: 2rem; margin-bottom: 1.5rem;">
+
+     <!-- LEFT image placeholder -->
+     <div style="flex: 1;">
+
+.. Note on the LEFT image:
+   - Replace ``_static/pdb_top.jpg`` with a top-view photograph of your PDB (populated PCB,
+     schematic screenshot, or render).
+   - Adjust ``:width:`` to fill roughly half the page (e.g. ``320px`` or ``45%``).
+   - To crop or offset, use the raw-HTML ``<div style="overflow:hidden">`` technique.
+
+.. figure:: /_static/pdb_top.jpg
+   :width: 320px
+   :align: left
+   :alt: Power distribution board — top view
+
+   *PDB top view — replace with your own photograph or schematic.*
+
+.. raw:: html
+
+     </div>
+
+     <!-- RIGHT image placeholder -->
+     <div style="flex: 1;">
+
+.. Note on the RIGHT image:
+   - Replace ``_static/pdb_schematic.png`` with your PDB schematic or bottom-view photograph.
+
+.. figure:: /_static/pdb_schematic.png
+   :width: 320px
+   :align: left
+   :alt: Power distribution board — schematic
+
+   *PDB schematic — replace with your own schematic or bottom-view photograph.*
+
+.. raw:: html
+
+     </div>
+   </div>
+
+Board Description
+------------------
+
+The PDB accepts the raw LiPo cell voltage on its input terminals and provides two regulated
+output rails:
+
+- **Servo rail (5 V / ~10 A)** — supplies all eighteen servos via a shared power bus.
+  A high-current switching regulator (buck converter) steps the LiPo voltage down to a stable
+  5 V regardless of cell state-of-charge.
+- **Logic rail (3.3 V / 500 mA)** — supplies the MCU and nRF24L01+ module via a low-dropout
+  linear regulator. The LDO is powered from the servo-rail output rather than raw battery
+  voltage to reduce its headroom requirement and therefore heat dissipation.
+
+Key protection features include:
+
+- **Reverse-polarity protection** — a P-channel MOSFET in the battery input path prevents
+  damage if the battery connector is accidentally reversed.
+- **Bulk capacitance** — 4 × 1000 µF electrolytic capacitors distributed across the servo
+  rail suppress transient voltage dips during servo stall events.
+- **Filtered logic supply** — a 100 µH inductor and 100 µF capacitor form an LC filter on
+  the LDO input, attenuating high-frequency switching noise from the buck converter before
+  it reaches the MCU.
+
+.. list-table:: PDB Electrical Specifications
+   :widths: 40 60
+   :header-rows: 1
+
+   * - Parameter
+     - Value
+   * - Input voltage range
+     - *TBD V* (e.g. 6–8.4 V for a 2S LiPo)
+   * - Servo rail output voltage
+     - 5.0 V ± 2 %
+   * - Servo rail max continuous current
+     - *TBD A*
+   * - Logic rail output voltage
+     - 3.3 V ± 1 %
+   * - Logic rail max current
+     - 500 mA
+   * - Efficiency (buck converter)
+     - *TBD %* @ full load
+   * - PCB dimensions
+     - *TBD × TBD mm*

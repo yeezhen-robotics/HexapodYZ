@@ -1,0 +1,123 @@
+.. _battery_power_distribution:
+
+=================================
+Battery Power Distribution Board
+=================================
+
+The battery power distribution board (BPDB) is the interface between the LiPo battery pack
+and the rest of the power system. It provides the main power switch, battery voltage monitoring,
+and the low-battery cutoff circuit that protects the LiPo cells from over-discharge — a
+condition that permanently damages LiPo chemistry if the cell voltage falls below ~3.0 V per cell.
+
+.. raw:: html
+
+   <div style="display: flex; align-items: flex-start; gap: 2rem; margin-bottom: 1.5rem;">
+
+     <!-- LEFT image placeholder -->
+     <div style="flex: 1;">
+
+.. Note on the LEFT image:
+   - Replace ``_static/bpdb_assembled.jpg`` with a photograph of the assembled BPDB.
+   - Adjust ``:width:`` to fill roughly half the page (e.g. ``320px``).
+   - To show only a region of the image, wrap in a ``<div style="overflow:hidden">`` block
+     and use ``object-position`` on the ``<img>`` tag (see ``how_did_i_do_it`` for the
+     full raw-HTML technique).
+
+.. figure:: /_static/bpdb_assembled.jpg
+   :width: 320px
+   :align: left
+   :alt: Battery power distribution board — assembled
+
+   *BPDB assembled — replace with your own photograph.*
+
+.. raw:: html
+
+     </div>
+
+     <!-- RIGHT image placeholder -->
+     <div style="flex: 1;">
+
+.. Note on the RIGHT image:
+   - Replace ``_static/bpdb_schematic.png`` with the BPDB schematic or a detail photograph
+     (e.g. the voltage-monitor circuit or the cutoff MOSFET stage).
+
+.. figure:: /_static/bpdb_schematic.png
+   :width: 320px
+   :align: left
+   :alt: Battery power distribution board — schematic
+
+   *BPDB schematic — replace with your own schematic.*
+
+.. raw:: html
+
+     </div>
+   </div>
+
+Board Description
+------------------
+
+The BPDB performs three functions:
+
+**1. Main power switching.**
+A latching push-button switch (or slide switch, depending on revision) connects and
+disconnects the battery from the downstream PDB. A high-side P-channel MOSFET rated for the
+full system current is placed in series with the switch to protect the switch contacts from
+arcing under load.
+
+**2. Battery voltage monitoring.**
+A resistor-divider network scales the battery terminal voltage to the MCU's ADC input range.
+The MCU samples this voltage at 1 Hz and broadcasts the battery state-of-charge over the
+wireless link to the controller display. A green LED on the BPDB illuminates when the battery
+is above 80 % and transitions to amber below 40 %, providing a local visual indicator
+independent of the wireless link.
+
+**3. Low-battery cutoff.**
+A dedicated voltage-comparator circuit monitors the battery terminal voltage. When the
+voltage falls below the configured cutoff threshold (corresponding to ~3.2 V per LiPo cell),
+the comparator output drives the MOSFET gate low, disconnecting the load and protecting the
+cells. The cutoff is latching — the system must be manually power-cycled after the battery is
+recharged to restore operation.
+
+.. list-table:: BPDB Electrical Specifications
+   :widths: 40 60
+   :header-rows: 1
+
+   * - Parameter
+     - Value
+   * - Input (battery) voltage range
+     - *TBD V* (e.g. 6.0–8.4 V for 2S LiPo)
+   * - Max continuous output current
+     - *TBD A*
+   * - Low-battery cutoff threshold
+     - *TBD V* (e.g. 6.4 V for 2S = 3.2 V/cell)
+   * - Quiescent current (board alone)
+     - *TBD mA*
+   * - Voltage monitor ADC scaling factor
+     - *TBD* (V_battery / V_adc)
+   * - PCB dimensions
+     - *TBD × TBD mm*
+
+Battery Selection
+------------------
+
+.. note::
+   Replace the values below with your actual battery specifications.
+
+The hexapod is powered by a **[TBD]** LiPo pack:
+
+.. list-table::
+   :widths: 40 60
+   :header-rows: 0
+
+   * - Cell configuration
+     - *TBD S / TBD P* (e.g. 2S1P)
+   * - Nominal voltage
+     - *TBD V*
+   * - Capacity
+     - *TBD mAh*
+   * - Continuous discharge rating
+     - *TBD C*
+   * - Connector
+     - *TBD* (e.g. XT30, XT60, Deans)
+   * - Estimated runtime
+     - *TBD min* at nominal walking speed
